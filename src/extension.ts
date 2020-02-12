@@ -2,13 +2,17 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
+const fs = require("fs");
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "trinity" is now active!');
+  console.log('Congratulations, your extension "trinity" is now active!');
+ 
+  const tChannel = vscode.window.createOutputChannel('trinity');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -20,9 +24,20 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World! This is trinity!');
   });
   
+  context.subscriptions.push(disposable);
+  // In the context of this extension-
+    // On a Save of a text document in a workspace (which is an event listener)
+      // We pass the event into handle save
+  context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(event => handleSave(event)));
+ 
+}
 
+// We recieve the event from the file that is being saved in the onDidSavetextDocument listener
+function handleSave(event: vscode.TextDocument){
 
-	context.subscriptions.push(disposable);
+ // console logging and reading the file that we have saved and converting it to string 
+console.log("saved", fs.readFileSync(event.fileName).toString());
+
 }
 
 // this method is called when your extension is deactivated
