@@ -27,10 +27,10 @@
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
-    "test": "node ./out/test/runTest.js",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development -watch",
-    "test-compile": "tsc -p ./"
+		"test": "node ./out/test/runTest.js",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development -watch",
+		"test-compile": "tsc -p ./"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",

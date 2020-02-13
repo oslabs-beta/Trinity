@@ -1,0 +1,37 @@
+[
+  {
+    "originNode": ["Person"],
+    "relationship": "ACTED_IN",
+    "dependentNode": ["Movie"]
+  },
+  {
+    "originNode": ["Person"],
+    "relationship": "DIRECTED",
+    "dependentNode": ["Movie"]
+  },
+  {
+    "originNode": ["Person"],
+    "relationship": "PRODUCED",
+    "dependentNode": ["Movie"]
+  },
+  {
+    "originNode": ["Person"],
+    "relationship": "WROTE",
+    "dependentNode": ["Movie"]
+  },
+  {
+    "originNode": ["Person"],
+    "relationship": "FOLLOWS",
+    "dependentNode": ["Person"]
+  },
+  {
+    "originNode": ["Person"],
+    "relationship": "REVIEWED",
+    "dependentNode": ["Movie"]
+  },
+  {
+    "originNode": ["Database"],
+    "relationship": "SAYS",
+    "dependentNode": ["Message"]
+  }
+]
