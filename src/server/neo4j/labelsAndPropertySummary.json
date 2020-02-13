@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Database",
+    "properties": ["name"]
+  },
+  {
+    "label": "Message",
+    "properties": ["name"]
+  },
+  {
+    "label": "Movie",
+    "properties": ["title", "tagline", "released"]
+  },
+  {
+    "label": "PERSON",
+    "properties": ["name"]
+  },
+  {
+    "label": "Person",
+    "properties": ["born", "name"]
+  }
+]
