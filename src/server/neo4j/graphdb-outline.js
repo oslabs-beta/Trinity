@@ -1,70 +1,77 @@
 const path = require('path');
 const neo4j = require('neo4j-driver');
-
-const driver = neo4j.driver(
-  'bolt://localhost',
-  neo4j.auth.basic('neo4j', 'test'),
-);
-
-const session = driver.session();
+const username = 'neo4j';
+const password = 'test';
 
 
-session
-  .run(`MATCH(n)
-  WITH LABELS(n) AS labels , KEYS(n) AS keys
-  UNWIND labels AS label
-  UNWIND keys AS key
-  RETURN DISTINCT label, COLLECT(DISTINCT key) AS props
-  ORDER BY label`)
-  .then((result) => {
-    const outline = result.records.map((el) => ({
+const getGraphStructure = async (user, pass) => {
+  const driver = neo4j.driver(
+    'bolt://localhost',
+    neo4j.auth.basic(user, pass),
+  );
+
+  const session = driver.session();
+  const txc = session.beginTransaction();
+  try {
+    //get graph outline of labels and properties
+    const outline = await txc.run(
+      `MATCH(n)
+      WITH LABELS(n) AS labels , KEYS(n) AS keys
+      UNWIND labels AS label
+      UNWIND keys AS key
+      RETURN DISTINCT label, COLLECT(DISTINCT key) AS props
+      ORDER BY label`
+    );
+    const outlineFormat = outline.records.map((el) => ({
       label: el._fields[0],
       properties: el._fields[1],
     }));
-    console.log(JSON.stringify(outline, null, 2));
-    // console.log(result);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-  .then(() => session.close());
-
-
-session
-  .run(` MATCH (a) -[r] -> (b)
-   WHERE NOT (b) -[]-> (a)
-   RETURN DISTINCT labels(a), type(r), labels(b)`)
-  .then((result) => {
-    const outline = result.records.map((el) => ({
+    // console.log(JSON.stringify(outlineFormat, null, 2));
+    //get uni-directional relationship 
+    const outline2 = await txc.run(
+      `MATCH (a) -[r] -> (b)
+      WHERE NOT (b) -[]-> (a)
+      RETURN DISTINCT labels(a), type(r), labels(b)`
+    );
+    const outline2Format = outline2.records.map((el) => ({
       originNode: el._fields[0],
       relationship: el._fields[1],
       dependentNode: el._fields[2],
     }));
-    console.log(JSON.stringify(outline, null, 2));
-    // console.log(result.records[0]._fields);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-  .then(() => session.close());
-
-session
-  .run(` MATCH (a) -[r] -> (b)
-   WHERE (b) -[]-> (a)
-   RETURN DISTINCT labels(a), type(r), labels(b)`)
-  .then((result) => {
-    const outline = result.records.map((el) => ({
+    // console.log(JSON.stringify(outline2Format, null, 2));
+     //get bi-directional relationship 
+    const outline3 = await txc.run(
+      `MATCH (a) -[r] -> (b)
+      WHERE (b) -[]-> (a)
+      RETURN DISTINCT labels(a), type(r), labels(b)`
+    );
+    const outline3Format = outline3.records.map((el) => ({
       originNode: el._fields[0],
       relationship: el._fields[1],
       dependentNode: el._fields[2],
     }));
-    console.log(JSON.stringify(outline, null, 2));
-    // console.log(result.records[0]._fields);
-  })
-  .catch((error) => {
+    // console.log(JSON.stringify(outline3Format, null, 2));
+    return {
+      graphOutline:outlineFormat,
+      uniDirectionalRelationship:outline2Format,
+      biDirectionalRelationship:outline3Format,
+
+    };
+  }
+  catch (error) {
     console.log(error);
-  })
-  .then(() => session.close());
+    await txc.rollback();
+    console.log('rolled back');
+  } finally {
+    session.close();
+    driver.close();
+  }
+};
+getGraphStructure(username, password)
+  .then((result) => {
+    console.log(result);
+  });
+
 
 
 /**
@@ -94,3 +101,4 @@ session
  * * Parameterized neo4j Queries in Node.js
  * https://www.youtube.com/watch?v=snjnJCZhXUM&t=905s
  */
+
