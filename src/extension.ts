@@ -2,8 +2,9 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-const fs = require("fs");
 
+const fs = require("fs");
+const parseExtract = require("./modules/parseExtract.js");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -36,7 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
 function handleSave(event: vscode.TextDocument){
 
  // console logging and reading the file that we have saved and converting it to string 
-console.log("saved", fs.readFileSync(event.fileName).toString());
+
+const result = parseExtract(fs.readFileSync(event.fileName).toString());
+
+console.log(result);
 
 }
 
