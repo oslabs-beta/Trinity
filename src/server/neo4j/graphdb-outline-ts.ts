@@ -72,7 +72,7 @@ const getGraphStructure = async (
   dbAddress: string,
   user: string,
   pass: string
-): Promise<GraphStructure> => {
+): Promise<GraphStructure | undefined> => {
   // create a connection to your neo4j database
   // handles basic authentication and connects to a local host
   const driver: Driver = neo4j.driver(dbAddress, neo4j.auth.basic(user, pass));
