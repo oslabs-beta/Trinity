@@ -37,7 +37,6 @@ export function activate(context: vscode.ExtensionContext) {
 function handleSave(event: vscode.TextDocument){
 
  // console logging and reading the file that we have saved and converting it to string 
-
 const result = parseExtract(fs.readFileSync(event.fileName).toString());
 
 console.log(result);

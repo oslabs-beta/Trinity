@@ -1,6 +1,6 @@
 
 
-function parseExtract (string: string) {
+function parseExtract (string: string): Array<string> | Array<boolean> {
 
 // Array for storing the Queries inside the string
 let array: Array<string> = [];
@@ -19,7 +19,7 @@ let array: Array<string> = [];
 
       //Create new variable for the query and end location
       //extract(newString) returns an array
-      let queryNLocation: Array<any> = extract(newString);
+      let queryNLocation: Array<string> & Array<number> = extract(newString);
 
       // push the query onto the main array
       array.push(queryNLocation[0]);
@@ -32,21 +32,19 @@ let array: Array<string> = [];
       findQuery(remainingString);
 
 
-    } else {
-      return
-    }
+    };
   };
 
   //passing newString in to extract
-  const extract = (string: string) => {
+  const extract = (string: string): Array<string> & Array<number> => {
  
 
     //variable for queryString
-    let queryString: any = '';
+    let queryString: string | boolean = '';
 
     // extract the query
     let count: number = 9;
-    let stack: Array<any> = [];
+    let stack: Array<string> = [];
     stack.push(string[8]);
     while(stack.length !== 0){
       
@@ -59,20 +57,20 @@ let array: Array<string> = [];
         break;
         case ']':
           if (stack.pop() !== '['){
-            queryString = false
+            queryString = false;
           } else {
             queryString += string[count];
           }
           break;
         case ')':
           if(stack.pop() !== '('){
-            queryString = false
+            queryString = false;
           } else {
             queryString += string[count];
           }          break;
         case '}':
           if(stack.pop() !== '{'){
-            queryString = false
+            queryString = false;
           } else {
             queryString += string[count];
           }
@@ -80,12 +78,12 @@ let array: Array<string> = [];
         case "\"" :
         case "\`" :
         case "\'":
-          let newPop: any = stack.pop();
+          let newPop: string | undefined = stack.pop();
           if( newPop === '\"' || newPop === '\'' || newPop === '\`' ){
             break;
           } else {
-            queryString = false
-            stack = []
+            queryString = false;
+            stack = [];
           } 
           break;
         default:
@@ -97,7 +95,9 @@ let array: Array<string> = [];
     }
     // find the location of the end of the query
     // returns an array of the query and the location of the end of the query
-    return [queryString, count+1];
+
+    const resultArray: Array<any> = [queryString, count+1];
+    return resultArray;
   };
 
   findQuery(string);
