@@ -19,7 +19,28 @@
 				"command": "extension.helloWorld",
 				"title": "Hello World"
 			}
-		]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "package-explorer",
+          "title": "Trinity",
+          "icon": "media/dep.svg"
+        }
+      ]
+    },
+    "views": {
+      "package-explorer": [
+        {
+          "id": "package-dependencies",
+          "name": "Trinity"
+        },
+        {
+          "id": "package-outline",
+          "name": "triniy"
+        }
+      ]
+    }
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
