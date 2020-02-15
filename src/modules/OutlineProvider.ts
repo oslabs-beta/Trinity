@@ -1,6 +1,8 @@
 
 import * as vscode from 'vscode';
 
+const { getGraphStructure } = require('../server/neo4j/graphdb-outline-ts');
+
 export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
   
     constructor(private context: vscode.ExtensionContext) {
@@ -11,8 +13,14 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
 
       let treeTasks: TreeTask[] = [];
 
-      //fetching tasks here
-      // let tasks = await vscode.tasks.
+      const dbAddress: string = "bolt://localhost";
+      const username: string = "neo4j";
+      const password: string = "test";
+
+      getGraphStructure(dbAddress, username, password).then(result => {
+        console.log( "Here" ,JSON.stringify(result, null, 2));
+      });
+
 
       //creating tree tasks
 
