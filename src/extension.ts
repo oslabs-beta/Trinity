@@ -1,10 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { stringify } from 'querystring';
 
 
 const fs = require("fs");
 const parseExtract = require("./modules/parseExtract.js");
+const { OutlineProvider } = require("./modules/OutlineProvider.js");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -14,6 +16,21 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "trinity" is now active!');
  
   const tChannel = vscode.window.createOutputChannel('trinity');
+
+  const OP = new OutlineProvider();
+  vscode.window.registerTreeDataProvider("package-dependencies", OP);
+
+
+  let newThing = vscode.commands.registerCommand('package-dependencies.executeTask', task => {
+    vscode.tasks.executeTask(task).then(function (value) {
+        return value;
+    }, function(e) {
+        console.error('Error');
+    });
+  });
+
+  context.subscriptions.push(newThing);
+
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand

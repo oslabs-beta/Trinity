@@ -18,7 +18,11 @@
 			{
 				"command": "extension.helloWorld",
 				"title": "Hello World"
-			}
+      },
+      {
+        "command": "package-dependencies.executeTask",
+        "title": "Execute"
+      }
     ],
     "viewsContainers": {
       "activitybar": [
