@@ -1,6 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import neo4j from "neo4j-driver";
+import { QueryResult } from "neo4j-driver/types/index";
+import { Driver } from "neo4j-driver/types/driver";
+import Session from "neo4j-driver/types/session";
+import Transaction from "neo4j-driver/types/transaction";
 
 let tChannel: any;
 const fs = require("fs");
@@ -40,8 +45,34 @@ function handleSave(event: vscode.TextDocument) {
   // console logging and reading the file that we have saved and converting it to string
   const result = parseExtract(fs.readFileSync(event.fileName).toString());
 
-  tChannel.appendLine("Hello");
-  tChannel.appendLine("Result: ", result);
+  const resultText = JSON.stringify(result, null, 2);
+  // tChannel.appendLine("RESULT ARRAY:\n" + result);
+  const test = "test";
+
+  const dbAddress: string = "bolt://localhost";
+  const username: string = "neo4j";
+  const password: string = "test";
+
+  const driver = neo4j.driver(dbAddress, neo4j.auth.basic(username, password));
+  const session = driver.session();
+  const txc = session.beginTransaction();
+
+  // tChannel.appendLine((() => "test")());
+  // tChannel.appendLine("Hello");
+  for (let query of result) {
+    tChannel.appendLine(query);
+    if (!query) {
+      tChannel.appendLine("Query skipped");
+      continue;
+    }
+    txc.run(query).then(result => {
+      tChannel.appendLine(`Result: ${JSON.stringify(result.records, null, 2)}`);
+    });
+  }
+
+  // tChannel.appendLine(result);
+  // tChannel.appendLine(test);
+  // tChannel.appendLine([]);
   console.log(result);
 }
 
