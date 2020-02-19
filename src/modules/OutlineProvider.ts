@@ -11,85 +11,116 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
 
   constructor(private context: vscode.ExtensionContext) {
 
-    //must push property keys into array
-    //Labels
-    //Movie
-    //title
-    //tagline
-    //releaseDate
-
-    //Relationships
-    //Person
-    //ActedIn
-    //Movie
-    //Directed
-    //nothaMovie  
-
-    // new TreeTask('label', Labelsdata)
-
-    // labelsdata = [ new Treetask()]
-
-    // new tree('relationship', relationshipdata)
-
-    // this.data=[new TreeTask('cars', [
-    //   new TreeTask(
-    //     'Ford', [new TreeTask('Fiesta'), new TreeTask('Focus'), new TreeTask('Mustang')]),
-    //   new TreeTask(
-    //     'BMW', [new TreeTask('320'), new TreeTask('X3'), new TreeTask('X5')])
-    // ])];
-
     const dbAddress: string="bolt://localhost";
     const username: string="neo4j";
     const password: string="test";
 
     getGraphStructure(dbAddress, username, password).then(result => {
 
-      // grab the specific categories
-      // and push them ontop tree tas
+      // all data
       const resultData=result;
 
-      let labels=[];
-      resultData.graphOutline.forEach(element => {
+      // interface
+      interface LooseObject {
+        [key: string]: any
+      }
 
-        let propertyData=[];
+      // Create Result Obj
 
-        element.properties.forEach(element => {
-          propertyData.push(new TreeTask(element));
-        });
+      const resultObj: LooseObject={
 
-        let newTask=new TreeTask(element.label, propertyData);
+      };
 
-        labels.push(newTask);
+      for (let i=0; i<resultData.uniDirectionalRelationship.length; i+=1) {
+        // for each unique  item in origin array, create a key on result obj
+        let originNodes=resultData.uniDirectionalRelationship[i].originNode;
+        let uniRelation=resultData.uniDirectionalRelationship[i].relationship;
+        let dependentNode=resultData.uniDirectionalRelationship[i].dependentNode;
+        for (let x=0; x<originNodes.length; x+=1) {
+          if (!resultObj[originNodes[x]]) {
+            resultObj[originNodes[x]]={
+              "uni": {},
+            };
+          }
+          resultObj[originNodes[x]].uni[uniRelation]=dependentNode;
+        }
+      }
+      // For all the bidrectional relationships in the data
+      for (let y=0; y<resultData.biDirectionalRelationship.length; y+=1) {
+        // Array of all the origin nodes in relationship object
+        let originNodes=resultData.biDirectionalRelationship[y].originNode;
+        // Relationship between origin nodes and depenent node
+        let biRelation=resultData.biDirectionalRelationship[y].relationship;
+        // Array of depend Nodes
+        let dependentNode=resultData.biDirectionalRelationship[y].dependentNode;
+        // for each origin node
+        for (let z=0; z<originNodes.length; z+=1) {
+          // We check if the result obj has that origin node
+          if (!resultObj[originNodes[z]]) {
+            resultObj[originNodes[x]]={
+              "bi": {},
+            };
+          }
+          // if the node is on the result obj, check if the bi relationship is on the node
+          if (!resultObj[originNodes[z]]["bi"]) {
+            resultObj[originNodes[z]]["bi"]={};
+          }
+          resultObj[originNodes[z]].bi[biRelation]=dependentNode;
+        }
+      }
+
+      resultData.graphOutline.forEach((element: LooseObject) => {
+
+        if (!resultObj[element.label]) {
+          resultObj[element.label]={};
+        }
+
+        resultObj[element.label]['properties']=element.properties;
       });
-
-      let labelTask=new TreeTask("Label", labels);
 
       this.data=[];
 
-      this.data.push(labelTask);
+      Object.keys(resultObj).forEach(element => {
+
+        let elementArray=[];
+
+        Object.keys(resultObj[element]).forEach(innerEl => {
+
+          let innerElArray=[];
+
+          // check if person.uni or properties etc is an array
+          if (Array.isArray(resultObj[element][innerEl])) {
+
+            resultObj[element][innerEl].forEach(innerMostEL => {
+              innerElArray.push(new TreeTask(innerMostEL));
+            });
+
+          } else {
+
+            Object.keys(resultObj[element][innerEl]).forEach(newInnerEl => {
+
+              let dependents=[];
 
 
-      //unidirectional relationships
+              resultObj[element][innerEl][newInnerEl].forEach(el => {
 
-      // resultData.uniDirectionalRelationships.forEach(element => {
+                dependents.push(new TreeTask(el));
 
-      //   let uniData=[];
+              });
 
-      //   element.originNode;
+              innerElArray.push(new TreeTask(newInnerEl, dependents));
+            });
+          }
+          let innerTreeTask=new TreeTask(innerEl, innerElArray);
 
-      // });
+          elementArray.push(innerTreeTask);
+        });
 
+        let elementTreeTask=new TreeTask(element, elementArray);
+        this.data.push(elementTreeTask);
 
-
-
-
-      //bidirectional relationships
-
-
-
-
+      });
     });
-
   }
 
   getChildren(element?: TreeTask|undefined): vscode.ProviderResult<TreeTask[]> {
