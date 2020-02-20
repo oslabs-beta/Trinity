@@ -38,6 +38,7 @@ function parseExtract(string: string): Array<string | boolean> {
   const extract = (
     string: string
   ): { queryString: string | boolean; currIndex: number } => {
+    
     const brackets: { [key: string]: string } = {
       "[": "PUSH TO STACK",
       "{": "PUSH TO STACK",
@@ -110,13 +111,6 @@ function parseExtract(string: string): Array<string | boolean> {
   return array;
 }
 
-// console.log(`THIS SHOULD BE SKIPPED`.length);
-// const testString =
-//   `THIS SHOULD BE SKIPPED` +
-//   `Trinity('Match (n{name: "Keanu Reeves"}) Return n')` +
-//   `Trinity('MATCH (n:Person) RETURN * LIMIT 1');`;
-// // Should start at 23
 
-// console.log(parseExtract(testString));
 
 module.exports = parseExtract;
