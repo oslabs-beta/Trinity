@@ -158,5 +158,5 @@ const username: string = "neo4j";
 const password: string = "test";
 
 // getGraphStructure(dbAddress, username, password).then(result => {
-//   console.log( "check this shit ", JSON.stringify(result, null, 2));
+//   console.log( "error getting graph structure", JSON.stringify(result, null, 2));
 // });
