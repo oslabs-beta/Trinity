@@ -68,7 +68,7 @@ interface GraphStructure {
  * @param {String} user - username to access database
  * @param {String} pass - password to access database
  */
-const getGraphStructure = async (
+export const getGraphStructure = async (
   dbAddress: string,
   user: string,
   pass: string
@@ -157,6 +157,6 @@ const dbAddress: string = "bolt://localhost";
 const username: string = "neo4j";
 const password: string = "test";
 
-getGraphStructure(dbAddress, username, password).then(result => {
-  console.log(JSON.stringify(result, null, 2));
-});
+// getGraphStructure(dbAddress, username, password).then(result => {
+//   console.log( "error getting graph structure", JSON.stringify(result, null, 2));
+// });

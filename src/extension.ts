@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import neo4j from "neo4j-driver";
+import { stringify } from "querystring";
 import { QueryResult } from "neo4j-driver/types/index";
 import { Driver } from "neo4j-driver/types/driver";
 import Session from "neo4j-driver/types/session";
@@ -10,6 +11,7 @@ import Transaction from "neo4j-driver/types/transaction";
 let tChannel: any;
 const fs = require("fs");
 const parseExtract = require("./modules/parseExtract.js");
+const { OutlineProvider } = require("./modules/OutlineProvider.js");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -17,6 +19,25 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "trinity" is now active!');
   tChannel = vscode.window.createOutputChannel("trinity");
+
+  const OP = new OutlineProvider();
+  vscode.window.registerTreeDataProvider("package-dependencies", OP);
+
+  let newThing = vscode.commands.registerCommand(
+    "package-dependencies.executeTask",
+    task => {
+      vscode.tasks.executeTask(task).then(
+        function(value) {
+          return value;
+        },
+        function(e) {
+          console.error("Error");
+        }
+      );
+    }
+  );
+
+  context.subscriptions.push(newThing);
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand

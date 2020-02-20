@@ -18,29 +18,20 @@
 			{
 				"command": "extension.helloWorld",
 				"title": "Hello World"
+			},
+			{
+				"command": "package-dependencies.executeTask",
+				"title": "Execute"
 			}
-    ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "package-explorer",
-          "title": "Trinity",
-          "icon": "media/dep.svg"
-        }
-      ]
-    },
-    "views": {
-      "package-explorer": [
-        {
-          "id": "package-dependencies",
-          "name": "Trinity"
-        },
-        {
-          "id": "package-outline",
-          "name": "triniy"
-        }
-      ]
-    }
+		],
+		"views": {
+			"Explorer": [
+				{
+					"id": "package-dependencies",
+					"name": "Trinity Outline"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
