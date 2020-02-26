@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.runTrinity"
+    "onCommand:extension.runTrinity",
+    // "onView:trinityOutline"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -20,14 +21,22 @@
         "title": "Run Trinity"
       },
       {
-        "command": "package-dependencies.executeTask",
+        "command": "trinityOutline.executeTask",
         "title": "Execute"
+      },
+      {
+        "command": "trinityOutline.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "views": {
       "explorer": [
         {
-          "id": "package-dependencies",
+          "id": "trinityOutline",
           "name": "Trinity Outline"
         }
       ]

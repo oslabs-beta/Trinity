@@ -15,16 +15,17 @@ const { OutlineProvider } = require("./modules/OutlineProvider.js");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  vscode.window.showInformationMessage("you are activated");
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "trinity" is now active!');
-  tChannel = vscode.window.createOutputChannel("trinity");
+  tChannel = vscode.window.createOutputChannel("Trinity");
 
-  const OP = new OutlineProvider();
-  vscode.window.registerTreeDataProvider("package-dependencies", OP);
+  // const OP = new OutlineProvider();
+  // vscode.window.registerTreeDataProvider("trinityOutline", OP);
 
   let newThing = vscode.commands.registerCommand(
-    "package-dependencies.executeTask",
+    "trinityOutline.executeTask",
     task => {
       vscode.tasks.executeTask(task).then(
         function(value) {
@@ -51,6 +52,12 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(
         "Trinity is now running!  Please make sure your database is connected."
       );
+
+      const OP = new OutlineProvider(context);
+      vscode.window.registerTreeDataProvider("trinityOutline", OP);
+      vscode.commands.registerCommand("trinityOutline.refresh", () =>
+        console.log("hi")
+      ); // OP.refresh());
     }
   );
 

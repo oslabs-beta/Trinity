@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from "path";
 
 const { getGraphStructure } = require("../server/neo4j/graphdb-outline-ts");
 
@@ -125,6 +126,52 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
 
   getTreeItem(element: TreeTask): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
+  }
+
+  refresh(offset?: number): void {
+    vscode.window.showInformationMessage("Refresh Triggered");
+    console.log("refresh triggered");
+    // this.parseTree();
+    // if (offset) {
+    // 	this._onDidChangeTreeData.fire(offset);
+    // } else {
+    // 	this._onDidChangeTreeData.fire();
+    // }
+  }
+
+  private getIcon(node: json.Node): any {
+    let nodeType = node.type;
+    if (nodeType === "boolean") {
+      return {
+        light: this.context.asAbsolutePath(
+          path.join("resources", "light", "boolean.svg")
+        ),
+        dark: this.context.asAbsolutePath(
+          path.join("resources", "dark", "boolean.svg")
+        )
+      };
+    }
+    if (nodeType === "string") {
+      return {
+        light: this.context.asAbsolutePath(
+          path.join("resources", "light", "string.svg")
+        ),
+        dark: this.context.asAbsolutePath(
+          path.join("resources", "dark", "string.svg")
+        )
+      };
+    }
+    if (nodeType === "number") {
+      return {
+        light: this.context.asAbsolutePath(
+          path.join("resources", "light", "number.svg")
+        ),
+        dark: this.context.asAbsolutePath(
+          path.join("resources", "dark", "number.svg")
+        )
+      };
+    }
+    return null;
   }
 }
 
