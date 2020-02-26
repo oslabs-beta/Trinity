@@ -19,7 +19,7 @@ interface Relationships {
   dependentNode: string[];
 }
 
-interface GraphStructure {
+export interface GraphStructure {
   graphOutline: Array<GraphOutline>;
   uniDirectionalRelationship: Array<Relationships>;
   biDirectionalRelationship: Array<Relationships>;
@@ -68,22 +68,22 @@ interface GraphStructure {
  * @param {String} user - username to access database
  * @param {String} pass - password to access database
  */
-export const getGraphStructure = async (
+export const getGraphStructure=async (
   dbAddress: string,
   user: string,
   pass: string
-): Promise<GraphStructure | undefined> => {
+): Promise<GraphStructure|undefined> => {
   // create a connection to your neo4j database
   // handles basic authentication and connects to a local host
-  const driver: Driver = neo4j.driver(dbAddress, neo4j.auth.basic(user, pass));
+  const driver: Driver=neo4j.driver(dbAddress, neo4j.auth.basic(user, pass));
 
   // initialize a query session
-  const session: Session = driver.session();
+  const session: Session=driver.session();
   // begin a transaction in order to send multiple queries
   // in a single session.
-  const txc: Transaction = session.beginTransaction();
+  const txc: Transaction=session.beginTransaction();
 
-  const queries: { [key: string]: string } = {
+  const queries: { [key: string]: string }={
     getOutline: `
       MATCH(n)
       WITH LABELS(n) AS labels , KEYS(n) AS keys
@@ -103,8 +103,8 @@ export const getGraphStructure = async (
 
   try {
     //get graph outline of labels and properties
-    const graphOutlineRaw: QueryResult = await txc.run(queries.getOutline);
-    const graphOutlineFormat: Array<GraphOutline> = graphOutlineRaw.records.map(
+    const graphOutlineRaw: QueryResult=await txc.run(queries.getOutline);
+    const graphOutlineFormat: Array<GraphOutline>=graphOutlineRaw.records.map(
       el => ({
         label: el._fields[0],
         properties: el._fields[1]
@@ -112,10 +112,10 @@ export const getGraphStructure = async (
     );
 
     //get uni-directional relationships
-    const uniDirectionalRaw: QueryResult = await txc.run(
+    const uniDirectionalRaw: QueryResult=await txc.run(
       queries.getUniDirectionalRelationships
     );
-    const uniDirectionalFormat: Array<Relationships> = uniDirectionalRaw.records.map(
+    const uniDirectionalFormat: Array<Relationships>=uniDirectionalRaw.records.map(
       el => ({
         originNode: el._fields[0],
         relationship: el._fields[1],
@@ -124,10 +124,10 @@ export const getGraphStructure = async (
     );
 
     //get bi-directional relationships
-    const biDirectionalRaw: QueryResult = await txc.run(
+    const biDirectionalRaw: QueryResult=await txc.run(
       queries.getBiDirectionalRelationships
     );
-    const biDirectionalFormat: Array<Relationships> = biDirectionalRaw.records.map(
+    const biDirectionalFormat: Array<Relationships>=biDirectionalRaw.records.map(
       el => ({
         originNode: el._fields[0],
         relationship: el._fields[1],
@@ -153,9 +153,9 @@ export const getGraphStructure = async (
   }
 };
 
-const dbAddress: string = "bolt://localhost";
-const username: string = "neo4j";
-const password: string = "test";
+const dbAddress: string="bolt://localhost";
+const username: string="neo4j";
+const password: string="test";
 
 // getGraphStructure(dbAddress, username, password).then(result => {
 //   console.log( "error getting graph structure", JSON.stringify(result, null, 2));
