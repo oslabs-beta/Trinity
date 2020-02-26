@@ -10,8 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.runTrinity",
-    // "onView:trinityOutline"
+    "onCommand:extension.runTrinity"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -23,6 +22,10 @@
       {
         "command": "trinityOutline.executeTask",
         "title": "Execute"
+      },
+      {
+        "command": "trinityOutline.show",
+        "title": "Show Trinity Outline"
       },
       {
         "command": "trinityOutline.refresh",
@@ -37,7 +40,17 @@
       "explorer": [
         {
           "id": "trinityOutline",
-          "name": "Trinity Outline"
+          "name": "Trinity Outline",
+          "when": "trinityOutlineEnabled"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "trinityOutline.refresh",
+          "when": "view == trinityOutline",
+          "group": "navigation"
         }
       ]
     }

@@ -11,10 +11,11 @@ import Transaction from "neo4j-driver/types/transaction";
 let tChannel: any;
 const fs = require("fs");
 const parseExtract = require("./modules/parseExtract.js");
-const { OutlineProvider } = require("./modules/OutlineProvider.js");
+import { OutlineProvider } from "./modules/OutlineProvider";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  // vscode.commands.executeCommand('setContext', 'trinityOutlineEnabled', true);
   vscode.window.showInformationMessage("you are activated");
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
@@ -54,10 +55,15 @@ export function activate(context: vscode.ExtensionContext) {
       );
 
       const OP = new OutlineProvider(context);
+      OP.show();
       vscode.window.registerTreeDataProvider("trinityOutline", OP);
       vscode.commands.registerCommand("trinityOutline.refresh", () =>
-        console.log("hi")
-      ); // OP.refresh());
+        OP.refresh()
+      );
+      vscode.commands.registerCommand("trinityOutline.show", () => {
+        console.log("show Triggered");
+        OP.show();
+      });
     }
   );
 
