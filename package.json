@@ -63,6 +63,7 @@
   "dependencies": {
     "neo4j-driver": "^4.0.1",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-typescript": "^1.0.0"
+    "parcel-plugin-typescript": "^1.0.0",
+    "walk": "^2.3.14"
   }
 }
