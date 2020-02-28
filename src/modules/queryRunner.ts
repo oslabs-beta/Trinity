@@ -14,7 +14,7 @@ export class QueryRunner {
     // console logging and reading the file that we have saved and converting it to string
     const result = parseExtract(fs.readFileSync(event.fileName).toString());
 
-    const resultText = JSON.stringify(result, null, 2);
+    // const resultText = JSON.stringify(result, null, 2);
     // tChannel.appendLine("RESULT ARRAY:\n" + result);
     const test = "test";
 
@@ -37,11 +37,23 @@ export class QueryRunner {
         this.tChannel.appendLine("Query skipped");
         continue;
       }
-      txc.run(query).then(result => {
-        this.tChannel.appendLine(
-          `Result: ${JSON.stringify(result.records, null, 2)}`
-        );
-      });
+      txc
+        .run(query)
+        .then(result => {
+          this.tChannel.appendLine(
+            `Result: ${JSON.stringify(result.records, null, 2)}`
+          );
+        })
+        // .then(() => {
+        //   vscode.window.showInformationMessage(
+        //     "Trinity: Your Graph Outline is up to Date!"
+        //   );
+        // })
+        .catch((err: Error): void => {
+          vscode.window.showInformationMessage(
+            "Trinity: Please check your query syntax."
+          );
+        });
     }
   }
 }
