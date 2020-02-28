@@ -7,7 +7,7 @@ const { OutlineProvider } = require("./modules/OutlineProvider.js");
 export function activate(context: vscode.ExtensionContext) {
   // extension.runTrinity has been defined in the package.json file
   vscode.commands.registerCommand("extension.runTrinity", () => {
-    vscode.window.showInformationMessage("Trinity is now running!");
+    // vscode.window.showInformationMessage("Trinity is now running!");
   });
 
   // Setup the Trinity Outline in the Explorer view
