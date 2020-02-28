@@ -23,7 +23,7 @@
     "views": {
       "explorer": [
         {
-          "id": "package-dependencies",
+          "id": "trinityOutline",
           "name": "Trinity Outline"
         }
       ]

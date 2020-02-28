@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
   tChannel = vscode.window.createOutputChannel("Trinity");
 
   const OP = new OutlineProvider();
-  vscode.window.registerTreeDataProvider("package-dependencies", OP);
+  vscode.window.registerTreeDataProvider("trinityOutline", OP);
 
   // In the context of this extension-
   // On a Save of a text document in a workspace (which is an event listener)
