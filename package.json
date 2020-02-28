@@ -18,13 +18,31 @@
       {
         "command": "extension.runTrinity",
         "title": "Run Trinity"
+      },
+      {
+        "command": "trinityOutline.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "views": {
       "explorer": [
         {
           "id": "trinityOutline",
-          "name": "Trinity Outline"
+          "name": "Trinity Outline",
+          "when": "trinityOutlineEnabled"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "trinityOutline.refresh",
+          "when": "view == trinityOutline",
+          "group": "navigation"
         }
       ]
     }

@@ -11,8 +11,16 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Setup the Trinity Outline in the Explorer view
-  const OP = new OutlineProvider();
+  const OP = new OutlineProvider(context);
+  OP.show();
   vscode.window.registerTreeDataProvider("trinityOutline", OP);
+  vscode.commands.registerCommand("trinityOutline.refresh", () =>
+    OP.createGraphStructure()
+  );
+  vscode.commands.registerCommand("trinityOutline.show", () => {
+    console.log("show Triggered");
+    OP.show();
+  });
 
   // Create a new setup Extension to handle live querying and
   // create a Trinity Channel
