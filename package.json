@@ -18,10 +18,6 @@
       {
         "command": "extension.runTrinity",
         "title": "Run Trinity"
-      },
-      {
-        "command": "package-dependencies.executeTask",
-        "title": "Execute"
       }
     ],
     "views": {
