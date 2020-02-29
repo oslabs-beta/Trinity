@@ -17,71 +17,71 @@
  * limitations under the License.
  */
 
-import Integer from './integer'
+import Integer from "./integer";
 
-declare type StandardDate = Date
-declare type NumberOrInteger = number | Integer
+declare type StandardDate = Date;
+declare type NumberOrInteger = number | Integer;
 
 declare class Node<T extends NumberOrInteger = Integer> {
-  identity: T
-  labels: string[]
-  properties: object
+  identity: T;
+  labels: string[];
+  properties: object;
 
-  constructor(identity: T, labels: string[], properties: object)
+  constructor(identity: T, labels: string[], properties: object);
 
-  toString(): string
+  toString(): string;
 }
 
 declare class Relationship<T extends NumberOrInteger = Integer> {
-  identity: T
-  start: T
-  end: T
-  type: string
-  properties: object
+  identity: T;
+  start: T;
+  end: T;
+  type: string;
+  properties: object;
 
-  constructor(identity: T, start: T, end: T, type: string, properties: object)
+  constructor(identity: T, start: T, end: T, type: string, properties: object);
 
-  toString(): string
+  toString(): string;
 }
 
 declare class UnboundRelationship<T extends NumberOrInteger = Integer> {
-  identity: T
-  type: string
-  properties: object
+  identity: T;
+  type: string;
+  properties: object;
 
-  constructor(identity: T, type: string, properties: object)
+  constructor(identity: T, type: string, properties: object);
 
-  bind(start: T, end: T): Relationship<T>
+  bind(start: T, end: T): Relationship<T>;
 
-  toString(): string
+  toString(): string;
 }
 
 declare class PathSegment<T extends NumberOrInteger = Integer> {
-  start: Node<T>
-  relationship: Relationship<T>
-  end: Node<T>
+  start: Node<T>;
+  relationship: Relationship<T>;
+  end: Node<T>;
 
-  constructor(start: Node<T>, rel: Relationship<T>, end: Node<T>)
+  constructor(start: Node<T>, rel: Relationship<T>, end: Node<T>);
 }
 
 declare class Path<T extends NumberOrInteger = Integer> {
-  start: Node<T>
-  end: Node<T>
-  segments: PathSegment<T>[]
-  length: number
+  start: Node<T>;
+  end: Node<T>;
+  segments: PathSegment<T>[];
+  length: number;
 
-  constructor(start: Node<T>, end: Node<T>, segments: PathSegment<T>[])
+  constructor(start: Node<T>, end: Node<T>, segments: PathSegment<T>[]);
 }
 
-declare function isNode(obj: object): boolean
+declare function isNode(obj: object): boolean;
 
-declare function isRelationship(obj: object): boolean
+declare function isRelationship(obj: object): boolean;
 
-declare function isUnboundRelationship(obj: object): boolean
+declare function isUnboundRelationship(obj: object): boolean;
 
-declare function isPath(obj: object): boolean
+declare function isPath(obj: object): boolean;
 
-declare function isPathSegment(obj: object): boolean
+declare function isPathSegment(obj: object): boolean;
 
 export {
   Node,
@@ -96,4 +96,4 @@ export {
   isPathSegment,
   NumberOrInteger,
   StandardDate
-}
+};

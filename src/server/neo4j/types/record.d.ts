@@ -17,30 +17,30 @@
  * limitations under the License.
  */
 
-declare type Visitor = (value: any, key: string, record: Record) => void
+declare type Visitor = (value: any, key: string, record: Record) => void;
 
-declare type MapVisitor<T> = (value: any, key: string, record: Record) => T
+declare type MapVisitor<T> = (value: any, key: string, record: Record) => T;
 
 declare class Record {
-  keys: string[]
-  length: number
-  _fields: any[]
+  keys: string[];
+  length: number;
+  _fields: any[];
 
   constructor(
     keys: string[],
     fields: any[],
     fieldLookup?: { [index: string]: string }
-  )
+  );
 
-  forEach(visitor: Visitor): void
+  forEach(visitor: Visitor): void;
 
-  map<T>(visitor: MapVisitor<T>): T[]
+  map<T>(visitor: MapVisitor<T>): T[];
 
-  toObject(): object
+  toObject(): object;
 
-  get(key: string | number): any
+  get(key: string | number): any;
 
-  has(key: string | number): boolean
+  has(key: string | number): boolean;
 }
 
-export default Record
+export default Record;

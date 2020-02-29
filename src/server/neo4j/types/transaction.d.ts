@@ -17,15 +17,15 @@
  * limitations under the License.
  */
 
-import Result from './result'
-import QueryRunner from './query-runner'
+import Result from "./result";
+import QueryRunner from "./query-runner";
 
 declare interface Transaction extends QueryRunner {
-  commit(): Promise<void>
+  commit(): Promise<void>;
 
-  rollback(): Promise<void>
+  rollback(): Promise<void>;
 
-  isOpen(): boolean
+  isOpen(): boolean;
 }
 
-export default Transaction
+export default Transaction;

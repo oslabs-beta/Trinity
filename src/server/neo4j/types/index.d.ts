@@ -17,15 +17,21 @@
  * limitations under the License.
  */
 
-import Integer, { inSafeRange, int, isInt, toNumber, toString } from './integer'
+import Integer, {
+  inSafeRange,
+  int,
+  isInt,
+  toNumber,
+  toString
+} from "./integer";
 import {
   Node,
   Path,
   PathSegment,
   Relationship,
   UnboundRelationship
-} from './graph-types'
-import { isPoint, Point } from './spatial-types'
+} from "./graph-types";
+import { isPoint, Point } from "./spatial-types";
 import {
   Date,
   DateTime,
@@ -39,14 +45,14 @@ import {
   LocalDateTime,
   LocalTime,
   Time
-} from './temporal-types'
+} from "./temporal-types";
 import {
   Neo4jError,
   PROTOCOL_ERROR,
   SERVICE_UNAVAILABLE,
   SESSION_EXPIRED
-} from './error'
-import Result, { ResultObserver, QueryResult } from './result'
+} from "./error";
+import Result, { ResultObserver, QueryResult } from "./result";
 import ResultSummary, {
   Notification,
   NotificationPosition,
@@ -54,9 +60,9 @@ import ResultSummary, {
   ProfiledPlan,
   ServerInfo,
   QueryStatistic
-} from './result-summary'
-import Record from './record'
-import Session from './session'
+} from "./result-summary";
+import Record from "./record";
+import Session from "./session";
 import {
   AuthToken,
   Config,
@@ -66,14 +72,14 @@ import {
   SessionMode,
   TrustStrategy,
   WRITE
-} from './driver'
-import Transaction from './transaction'
-import { Parameters } from './query-runner'
+} from "./driver";
+import Transaction from "./transaction";
+import { Parameters } from "./query-runner";
 
 declare const auth: {
-  basic: (username: string, password: string, realm?: string) => AuthToken
+  basic: (username: string, password: string, realm?: string) => AuthToken;
 
-  kerberos: (base64EncodedTicket: string) => AuthToken
+  kerberos: (base64EncodedTicket: string) => AuthToken;
 
   custom: (
     principal: string,
@@ -81,63 +87,63 @@ declare const auth: {
     realm: string,
     scheme: string,
     parameters?: Parameters
-  ) => AuthToken
-}
+  ) => AuthToken;
+};
 
 declare function driver(
   url: string,
   authToken?: AuthToken,
   config?: Config
-): Driver
+): Driver;
 
 declare const types: {
-  Node: Node
-  Relationship: Relationship
-  UnboundRelationship: UnboundRelationship
-  PathSegment: PathSegment
-  Path: Path
-  Result: Result
-  ResultSummary: ResultSummary
-  Record: Record
-  Point: typeof Point
-  Duration: typeof Duration
-  LocalTime: typeof LocalTime
-  Time: typeof Time
-  Date: typeof Date
-  LocalDateTime: typeof LocalDateTime
-  DateTime: typeof DateTime
-  Integer: typeof Integer
-}
+  Node: Node;
+  Relationship: Relationship;
+  UnboundRelationship: UnboundRelationship;
+  PathSegment: PathSegment;
+  Path: Path;
+  Result: Result;
+  ResultSummary: ResultSummary;
+  Record: Record;
+  Point: typeof Point;
+  Duration: typeof Duration;
+  LocalTime: typeof LocalTime;
+  Time: typeof Time;
+  Date: typeof Date;
+  LocalDateTime: typeof LocalDateTime;
+  DateTime: typeof DateTime;
+  Integer: typeof Integer;
+};
 
 declare const session: {
-  READ: typeof READ
-  WRITE: typeof WRITE
-}
+  READ: typeof READ;
+  WRITE: typeof WRITE;
+};
 
 declare const error: {
-  SERVICE_UNAVAILABLE: typeof SERVICE_UNAVAILABLE
-  SESSION_EXPIRED: typeof SESSION_EXPIRED
-  PROTOCOL_ERROR: typeof PROTOCOL_ERROR
-}
+  SERVICE_UNAVAILABLE: typeof SERVICE_UNAVAILABLE;
+  SESSION_EXPIRED: typeof SESSION_EXPIRED;
+  PROTOCOL_ERROR: typeof PROTOCOL_ERROR;
+};
 
 declare const integer: {
-  toNumber: typeof toNumber
-  toString: typeof toString
-  inSafeRange: typeof inSafeRange
-}
+  toNumber: typeof toNumber;
+  toString: typeof toString;
+  inSafeRange: typeof inSafeRange;
+};
 
 declare const spatial: {
-  isPoint: typeof isPoint
-}
+  isPoint: typeof isPoint;
+};
 
 declare const temporal: {
-  isDuration: typeof isDuration
-  isLocalTime: typeof isLocalTime
-  isTime: typeof isTime
-  isDate: typeof isDate
-  isLocalDateTime: typeof isLocalDateTime
-  isDateTime: typeof isDateTime
-}
+  isDuration: typeof isDuration;
+  isLocalTime: typeof isLocalTime;
+  isTime: typeof isTime;
+  isDate: typeof isDate;
+  isLocalDateTime: typeof isLocalDateTime;
+  isDateTime: typeof isDateTime;
+};
 
 /*
  Both default and non-default exports declare all visible types so that they can be used in client code like this:
@@ -149,57 +155,57 @@ declare const temporal: {
 */
 
 declare const forExport: {
-  driver: typeof driver
-  int: typeof int
-  isInt: typeof isInt
-  integer: typeof integer
-  auth: typeof auth
-  types: typeof types
-  session: typeof session
-  error: typeof error
-  spatial: typeof spatial
-  temporal: typeof temporal
-  Driver: Driver
-  AuthToken: AuthToken
-  Config: Config
-  EncryptionLevel: EncryptionLevel
-  TrustStrategy: TrustStrategy
-  SessionMode: SessionMode
-  Neo4jError: Neo4jError
-  Node: Node
-  Relationship: Relationship
-  UnboundRelationship: UnboundRelationship
-  PathSegment: PathSegment
-  Path: Path
-  Integer: Integer
-  Record: Record
-  Result: Result
-  QueryResult: QueryResult
-  ResultObserver: ResultObserver
-  ResultSummary: ResultSummary
-  Plan: Plan
-  ProfiledPlan: ProfiledPlan
-  QueryStatistic: QueryStatistic
-  Notification: Notification
-  ServerInfo: ServerInfo
-  NotificationPosition: NotificationPosition
-  Session: Session
-  Transaction: Transaction
-  Point: Point
-  isPoint: typeof isPoint
-  Duration: Duration
-  LocalTime: LocalTime
-  Time: Time
-  Date: Date
-  LocalDateTime: LocalDateTime
-  DateTime: DateTime
-  isDuration: typeof isDuration
-  isLocalTime: typeof isLocalTime
-  isTime: typeof isTime
-  isDate: typeof isDate
-  isLocalDateTime: typeof isLocalDateTime
-  isDateTime: typeof isDateTime
-}
+  driver: typeof driver;
+  int: typeof int;
+  isInt: typeof isInt;
+  integer: typeof integer;
+  auth: typeof auth;
+  types: typeof types;
+  session: typeof session;
+  error: typeof error;
+  spatial: typeof spatial;
+  temporal: typeof temporal;
+  Driver: Driver;
+  AuthToken: AuthToken;
+  Config: Config;
+  EncryptionLevel: EncryptionLevel;
+  TrustStrategy: TrustStrategy;
+  SessionMode: SessionMode;
+  Neo4jError: Neo4jError;
+  Node: Node;
+  Relationship: Relationship;
+  UnboundRelationship: UnboundRelationship;
+  PathSegment: PathSegment;
+  Path: Path;
+  Integer: Integer;
+  Record: Record;
+  Result: Result;
+  QueryResult: QueryResult;
+  ResultObserver: ResultObserver;
+  ResultSummary: ResultSummary;
+  Plan: Plan;
+  ProfiledPlan: ProfiledPlan;
+  QueryStatistic: QueryStatistic;
+  Notification: Notification;
+  ServerInfo: ServerInfo;
+  NotificationPosition: NotificationPosition;
+  Session: Session;
+  Transaction: Transaction;
+  Point: Point;
+  isPoint: typeof isPoint;
+  Duration: Duration;
+  LocalTime: LocalTime;
+  Time: Time;
+  Date: Date;
+  LocalDateTime: LocalDateTime;
+  DateTime: DateTime;
+  isDuration: typeof isDuration;
+  isLocalTime: typeof isLocalTime;
+  isTime: typeof isTime;
+  isDate: typeof isDate;
+  isLocalDateTime: typeof isLocalDateTime;
+  isDateTime: typeof isDateTime;
+};
 
 export {
   driver,
@@ -252,6 +258,6 @@ export {
   isDate,
   isLocalDateTime,
   isDateTime
-}
+};
 
-export default forExport
+export default forExport;

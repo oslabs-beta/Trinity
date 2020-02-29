@@ -17,83 +17,83 @@
  * limitations under the License.
  */
 
-import Integer from './integer'
-import { NumberOrInteger } from './graph-types'
+import Integer from "./integer";
+import { NumberOrInteger } from "./graph-types";
 
 declare interface ResultSummary<T extends NumberOrInteger = Integer> {
-  query: { text: string; parameters: { [key: string]: any } }
-  queryType: string
-  counters: QueryStatistic
-  plan: Plan
-  profile: ProfiledPlan
-  notifications: Notification[]
-  server: ServerInfo
-  resultConsumedAfter: T
-  resultAvailableAfter: T
+  query: { text: string; parameters: { [key: string]: any } };
+  queryType: string;
+  counters: QueryStatistic;
+  plan: Plan;
+  profile: ProfiledPlan;
+  notifications: Notification[];
+  server: ServerInfo;
+  resultConsumedAfter: T;
+  resultAvailableAfter: T;
 
-  hasPlan(): boolean
+  hasPlan(): boolean;
 
-  hasProfile(): boolean
+  hasProfile(): boolean;
 }
 
 declare interface Plan {
-  operatorType: string
-  identifiers: string[]
-  arguments: { [key: string]: string }
-  children: Plan[]
+  operatorType: string;
+  identifiers: string[];
+  arguments: { [key: string]: string };
+  children: Plan[];
 }
 
 declare interface ProfiledPlan {
-  operatorType: string
-  identifiers: string[]
-  arguments: { [key: string]: string }
-  dbHits: number
-  rows: number
-  pageCacheMisses: number
-  pageCacheHits: number
-  pageCacheHitRatio: number
-  time: number
+  operatorType: string;
+  identifiers: string[];
+  arguments: { [key: string]: string };
+  dbHits: number;
+  rows: number;
+  pageCacheMisses: number;
+  pageCacheHits: number;
+  pageCacheHitRatio: number;
+  time: number;
 
-  hasPageCacheStats(): boolean
+  hasPageCacheStats(): boolean;
 
-  children: ProfiledPlan[]
+  children: ProfiledPlan[];
 }
 
 declare interface QueryStatistic {
-  containsUpdates(): boolean
+  containsUpdates(): boolean;
 
-  containsSystemUpdates(): boolean
+  containsSystemUpdates(): boolean;
 
-  updates(): { [key: string]: number }
+  updates(): { [key: string]: number };
 
-  systemUpdates(): number
+  systemUpdates(): number;
 }
 
 declare type NotificationPosition = {
-  offset: number
-  line: number
-  column: number
-}
+  offset: number;
+  line: number;
+  column: number;
+};
 
 declare interface Notification {
-  code: string
-  title: string
-  description: string
-  severity: string
-  position: NotificationPosition | {}
+  code: string;
+  title: string;
+  description: string;
+  severity: string;
+  position: NotificationPosition | {};
 }
 
 declare interface ServerInfo {
-  address: string
-  version: string
+  address: string;
+  version: string;
 }
 
 declare const queryType: {
-  READ_ONLY: 'r'
-  READ_WRITE: 'rw'
-  WRITE_ONLY: 'w'
-  SCHEMA_WRITE: 's'
-}
+  READ_ONLY: "r";
+  READ_WRITE: "rw";
+  WRITE_ONLY: "w";
+  SCHEMA_WRITE: "s";
+};
 
 export {
   queryType,
@@ -103,6 +103,6 @@ export {
   Notification,
   ServerInfo,
   NotificationPosition
-}
+};
 
-export default ResultSummary
+export default ResultSummary;

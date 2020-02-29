@@ -17,14 +17,14 @@
  * limitations under the License.
  */
 
-import Result from './result'
+import Result from "./result";
 
-declare type Parameters = { [key: string]: any }
+declare type Parameters = { [key: string]: any };
 
 declare interface QueryRunner {
-  run(query: string, parameters?: Parameters): Result
+  run(query: string, parameters?: Parameters): Result;
 }
 
-export { Parameters }
+export { Parameters };
 
-export default QueryRunner
+export default QueryRunner;

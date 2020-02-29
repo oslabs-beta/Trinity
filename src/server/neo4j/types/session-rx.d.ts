@@ -16,36 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import RxResult from './result-rx'
-import RxTransaction from './transaction-rx'
-import { TransactionConfig } from './session'
-import { Parameters } from './query-runner'
-import { Observable } from 'rxjs'
+import RxResult from "./result-rx";
+import RxTransaction from "./transaction-rx";
+import { TransactionConfig } from "./session";
+import { Parameters } from "./query-runner";
+import { Observable } from "rxjs";
 
-declare type RxTransactionWork<T> = (tx: RxTransaction) => Observable<T>
+declare type RxTransactionWork<T> = (tx: RxTransaction) => Observable<T>;
 
 declare interface RxSession {
   run(
     query: string,
     parameters?: Parameters,
     config?: TransactionConfig
-  ): RxResult
+  ): RxResult;
 
-  beginTransaction(config?: TransactionConfig): Observable<RxTransaction>
+  beginTransaction(config?: TransactionConfig): Observable<RxTransaction>;
 
-  lastBookmark(): string | null
+  lastBookmark(): string | null;
 
   readTransaction<T>(
     work: RxTransactionWork<T>,
     config?: TransactionConfig
-  ): Observable<T>
+  ): Observable<T>;
 
   writeTransaction<T>(
     work: RxTransactionWork<T>,
     config?: TransactionConfig
-  ): Observable<T>
+  ): Observable<T>;
 
-  close(): Observable<any>
+  close(): Observable<any>;
 }
 
-export default RxSession
+export default RxSession;

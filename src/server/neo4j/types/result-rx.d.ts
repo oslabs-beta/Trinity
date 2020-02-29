@@ -16,16 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Observable } from 'rxjs'
-import ResultSummary from './result-summary'
-import Record from './record'
+import { Observable } from "rxjs";
+import ResultSummary from "./result-summary";
+import Record from "./record";
 
 declare interface RxResult {
-  keys(): Observable<string[]>
+  keys(): Observable<string[]>;
 
-  records(): Observable<Record>
+  records(): Observable<Record>;
 
-  summary(): Observable<ResultSummary>
+  summary(): Observable<ResultSummary>;
 }
 
-export default RxResult
+export default RxResult;
