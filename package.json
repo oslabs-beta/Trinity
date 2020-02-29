@@ -20,15 +20,29 @@
         "title": "Run Trinity"
       },
       {
-        "command": "package-dependencies.executeTask",
-        "title": "Execute"
+        "command": "trinityOutline.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "views": {
       "explorer": [
         {
-          "id": "package-dependencies",
-          "name": "Trinity Outline"
+          "id": "trinityOutline",
+          "name": "Trinity Outline",
+          "when": "trinityOutlineEnabled"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "trinityOutline.refresh",
+          "when": "view == trinityOutline",
+          "group": "navigation"
         }
       ]
     }

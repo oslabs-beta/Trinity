@@ -2,6 +2,7 @@
 
 // ! Had to update Record TS Class to include "_fields?: object" in:
 // ! node_modules/neo4j-driver/types/record.d.ts
+import * as vscode from "vscode";
 import neo4j from "neo4j-driver";
 import { QueryResult } from "neo4j-driver/types/index";
 import { Driver } from "neo4j-driver/types/driver";
@@ -19,7 +20,7 @@ interface Relationships {
   dependentNode: string[];
 }
 
-interface GraphStructure {
+export interface GraphStructure {
   graphOutline: Array<GraphOutline>;
   uniDirectionalRelationship: Array<Relationships>;
   biDirectionalRelationship: Array<Relationships>;
@@ -142,14 +143,22 @@ export const getGraphStructure = async (
       biDirectionalRelationship: biDirectionalFormat
     };
   } catch (error) {
-    console.log(error);
-    await txc.rollback();
-    console.log("rolled back");
+    // console.log(error);
+    // await txc.rollback();
+    // console.log("rolled back");
+    // .catch((err: Error): void => {
+    vscode.window.showInformationMessage(
+      "Please confirm your database is up and running and restart your Trinity Extension."
+    );
+    // });
   } finally {
     // to end exucution we must close the driver and session
     // otherwise execution context will be left hanging
     session.close();
     driver.close();
+    vscode.window.showInformationMessage(
+      "Trinity: Your Graph Outline is up to Date!"
+    );
   }
 };
 
