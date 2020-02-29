@@ -4,10 +4,10 @@
 // ! node_modules/neo4j-driver/types/record.d.ts
 import * as vscode from "vscode";
 import neo4j from "neo4j-driver";
-import { QueryResult } from "neo4j-driver/types/index";
-import { Driver } from "neo4j-driver/types/driver";
-import Session from "neo4j-driver/types/session";
-import Transaction from "neo4j-driver/types/transaction";
+import { QueryResult } from "./types/index";
+import { Driver } from "./types/driver";
+import Session from "./types/session";
+import Transaction from "./types/transaction";
 
 interface GraphOutline {
   label: string;
