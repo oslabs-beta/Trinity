@@ -151,21 +151,25 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
 
         // check if person.uni or properties etc is an array
         if (innerEl==="Properties") {
-          resultObj.element.Properties.forEach(innerMostEL => {
+          resultObj[element].Properties.forEach(innerMostEL => {
             innerElArray.push(new TreeTask(innerMostEL));
           });
         } else {
           if (innerEl==="Bi-Directional"||innerEl==="Uni-Directional") {
-            Object.keys(resultObj.element[innerEl]).forEach(newInnerEl => {
-              let dependents: TreeTask[]=[];
 
-              resultObj.element[innerEl][newInnerEl].forEach(el => {
-                dependents.push(new TreeTask(el));
+            if (resultObj[element][innerEl]!==undefined) {
+              Object.keys(resultObj[element][innerEl]).forEach(newInnerEl => {
+                let dependents: TreeTask[]=[];
+
+                resultObj[element][innerEl][newInnerEl].forEach(el => {
+                  dependents.push(new TreeTask(el));
+                });
+
+                innerElArray.push(new TreeTask(newInnerEl, dependents));
               });
-
-              innerElArray.push(new TreeTask(newInnerEl, dependents));
-            });
+            }
           }
+
         }
         let innerTreeTask=new TreeTask(innerEl, innerElArray);
 
