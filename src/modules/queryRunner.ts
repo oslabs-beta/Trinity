@@ -31,6 +31,7 @@ export class QueryRunner {
 
     // tChannel.appendLine((() => "test")());
     // tChannel.appendLine("Hello");
+    
     for (let query of result) {
       this.tChannel.appendLine(query);
       if (!query) {
