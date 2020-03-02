@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { QueryRunner } from "./modules/queryRunner";
-const { OutlineProvider } = require("./modules/OutlineProvider.js");
+const { OutlineProvider } = require("./modules/OutlineProvider");
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed

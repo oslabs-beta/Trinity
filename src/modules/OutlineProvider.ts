@@ -108,7 +108,6 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
         resultObj[nameNode].Properties = propsNode;
       }
     }
-
     return resultObj;
   }
 
@@ -176,7 +175,7 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
       let elementTreeTask = new TreeTask(element, elementArray);
       array.push(elementTreeTask);
     });
-
+    console.log(array);
     return array;
   }
 
