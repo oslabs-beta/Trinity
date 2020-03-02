@@ -1,10 +1,18 @@
 import * as vscode from "vscode";
 import { QueryRunner } from "./modules/queryRunner";
 const { OutlineProvider } = require("./modules/OutlineProvider.js");
+import { TrinityConfig } from "./modules/readConfig";
+
+let config: object;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  // Load configuration
+  const trinityConfig = new TrinityConfig();
+  // trinityConfig.getActiveWorkspace();
+  // trinityConfig.watchConfig();
+
   // extension.runTrinity has been defined in the package.json file
   vscode.commands.registerCommand("extension.runTrinity", () => {
     // vscode.window.showInformationMessage("Trinity is now running!");

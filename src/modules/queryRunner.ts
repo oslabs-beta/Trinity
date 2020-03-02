@@ -14,10 +14,6 @@ export class QueryRunner {
     // console logging and reading the file that we have saved and converting it to string
     const result = parseExtract(fs.readFileSync(event.fileName).toString());
 
-    // const resultText = JSON.stringify(result, null, 2);
-    // tChannel.appendLine("RESULT ARRAY:\n" + result);
-    const test = "test";
-
     const dbAddress: string = "bolt://localhost";
     const username: string = "neo4j";
     const password: string = "test";
@@ -26,11 +22,9 @@ export class QueryRunner {
       dbAddress,
       neo4j.auth.basic(username, password)
     );
-    const session = driver.session();
+    const session = driver.session({ defaultAccessMode: neo4j.session.WRITE });
     const txc = session.beginTransaction();
 
-    // tChannel.appendLine((() => "test")());
-    // tChannel.appendLine("Hello");
     for (let query of result) {
       this.tChannel.appendLine(query);
       if (!query) {
@@ -43,12 +37,9 @@ export class QueryRunner {
           this.tChannel.appendLine(
             `Result: ${JSON.stringify(result.records, null, 2)}`
           );
+          session.close();
+          driver.close();
         })
-        // .then(() => {
-        //   vscode.window.showInformationMessage(
-        //     "Trinity: Your Graph Outline is up to Date!"
-        //   );
-        // })
         .catch((err: Error): void => {
           vscode.window.showInformationMessage(
             "Trinity: Please check your query syntax."
