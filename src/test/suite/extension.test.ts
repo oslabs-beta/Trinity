@@ -1,7 +1,9 @@
 import * as assert from "assert";
+import * as sampleData from "./sampleData.js";
 const { parseExtract } = require("../../modules/parseExtract");
 const { extract } = require("../../modules/parseExtract");
-const { OutlineProvier } = require("../../modules/OutlineProvier")
+const { OutlineProvider } = require("../../modules/OutlineProvider");
+
 //import { expect } from "chai";
 
 // You can import and use all API from the 'vscode' module
@@ -11,6 +13,26 @@ import * as vscode from "vscode";
 
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
+
+  const exResultData = {
+    graphOutline: [
+      { label: "Movie", properties: ["title", "tagline", "released"] },
+      { label: "Person", properties: ["born", "name"] }
+    ],
+    uniDirectionalRelationship: [
+      {
+        originNode: ["Person"],
+        relationship: "ACTED_IN",
+        dependentNode: ["Movie"]
+      },
+      {
+        originNode: ["Person"],
+        relationship: "ACTED_IN",
+        dependentNode: ["Movie"]
+      }
+    ],
+    biDirectionalRelationship: []
+  };
 
   test("Sample test", () => {
     assert.equal(-1, [1, 2, 3].indexOf(5));
@@ -31,4 +53,27 @@ suite("Extension Test Suite", () => {
     assert.equal(queryArray[1], "anotherTest");
   });
   //Testing OutlineProvier methods
+
+  const outlineProvider = new OutlineProvider();
+  const exResultObj = outlineProvider.createResultObj(exResultData);
+
+  test("OutlineProvider class", () => {
+    assert.equal(exResultObj.Person.Properties[0], "born");
+    assert.equal(exResultObj.Movie.Properties[1], "tagline");
+    assert.equal(exResultObj.Person["Uni-Directional"].ACTED_IN[0], "Movie");
+  });
+
+  // testing setUpData method
+
+  const treeData = outlineProvider.setUpData(exResultObj);
+
+  test("setUpData method", () => {
+    assert.equal(treeData[0].label, "Person");
+    assert.equal(treeData[0].children[0].label, "Uni-Directional");
+    assert.equal(treeData[0].children[0].children[0].label, "ACTED_IN");
+    assert.equal(
+      treeData[0].children[0].children[0].children[0].label,
+      "Movie"
+    );
+  });
 });
