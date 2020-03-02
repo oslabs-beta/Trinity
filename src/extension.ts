@@ -19,7 +19,14 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Setup the Trinity Outline in the Explorer view
-  const OP = new OutlineProvider(context);
+  // ? only for testing of config file
+  const testConfig = {
+    dbAddress: "bolt://localhost",
+    username: "neo4j",
+    password: "test"
+  };
+
+  const OP = new OutlineProvider(context, testConfig);
   OP.show();
   vscode.window.registerTreeDataProvider("trinityOutline", OP);
   vscode.commands.registerCommand("trinityOutline.refresh", () =>
@@ -32,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Create a new setup Extension to handle live querying and
   // create a Trinity Channel
-  const queryRunner = new QueryRunner();
+  const queryRunner = new QueryRunner(testConfig);
   // functionality executed every time the active document is saved
   vscode.workspace.onDidSaveTextDocument(event =>
     queryRunner.handleSave(event)
