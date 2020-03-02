@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
@@ -7,28 +8,25 @@ interface TrinitySettings {
   dbAddress: string;
   username: string;
   password: string;
+  clearChannelOnSave: boolean;
 }
 
-// export interface TrinityConfig {
-//   getFilePath: string;
-//   getConfigSetup: TrinitySettings;
-//   watchConfig: void;
-// }
-
 export class TrinityConfig {
-  configFilePath?: string;
   activeWorkspaceName?: string;
   activeWorkspacePath?: string;
-  // ! make an interface for config settings
-  activeSettings?: object;
+  configFilePath?: string;
+  configWatcher?: fs.FSWatcher;
+  activeSettings?: TrinitySettings;
 
   constructor() {
+    this.watchHandler.bind(this);
     this.getActiveWorkspace();
   }
+
   findFileInParentDirectory(
     startingDirectory: string,
     fileName: string
-  ): string {
+  ): string | undefined {
     let currPath: string = startingDirectory;
     const rootDir: string = path.parse(process.cwd()).root;
     while (currPath !== rootDir) {
@@ -44,9 +42,10 @@ export class TrinityConfig {
       currPath = path.resolve(currPath, "../");
       // console.log(currPath);
     }
-    return "";
+    return undefined;
   }
-  getSettingsPath(directoryName: string, fileName: string): string {
+
+  getSettingsPath(directoryName: string, fileName: string): string | undefined {
     //recursively look for config file inside sub directories
     let configPathSubdirectory: string[] = find.fileSync(
       fileName,
@@ -66,49 +65,76 @@ export class TrinityConfig {
   }
 
   watchConfig(): void {
-    const filePath: string = this.getSettingsPath(__dirname, ".trinity.json");
-    // console.log(__dirname);
-    // console.log(filePath);
-
-    // ! Udate to kill watch
+    // Kill current watch if alread in progress
     // https://stackoverflow.com/questions/53983342/how-to-close-fs-watch-listener-for-a-folder
-    fs.watch(filePath, () => {
-      //curr, prev) => {
-      // console.log("curr: ", curr);
-      // console.log("prev: ", prev);
-      const string: string = fs.readFileSync(filePath, "utf8");
-      console.log(JSON.parse(string));
-    });
+    if (this.configWatcher) this.configWatcher.close();
+
+    // Initialize new watcher and store as this.configWatcher
+    if (!this.configFilePath) return;
+    // const watcher = fs.watch.bind(this);
+    this.configWatcher = fs.watch(this.configFilePath, () =>
+      this.watchHandler()
+    );
+    console.log("watching config file");
   }
 
-  getActiveWorkspace() {
+  watchHandler(): void {
+    console.log("Watch Handler Fired: ", this.configFilePath);
+    if (!this.configFilePath) return;
+
+    const string: string = fs.readFileSync(this.configFilePath, "utf8");
+    console.log(string);
+    this.activeSettings = JSON.parse(string);
+    console.log(this.activeSettings);
+  }
+
+  getActiveWorkspace(): void {
+    // find all the current active workspaces
     const activeWorkspaces: vscode.WorkspaceFolder[] | undefined =
       vscode.workspace.workspaceFolders;
     let quickPicks: string[] = [];
+
     console.log(activeWorkspaces);
+
+    // convert active workspaces to format for quickpick dropdown
     if (activeWorkspaces) {
       quickPicks = activeWorkspaces.map(
         (el, index) => `${index + 1}. ${el.name}`
       );
     }
-    vscode.window.showQuickPick(quickPicks).then(res => {
-      console.log("res: ", res);
-      if (res && activeWorkspaces) {
-        // get index of selection
-        const index: number = parseInt(res.split(".")[0]) - 1;
 
-        this.activeWorkspaceName = res;
-        this.activeWorkspacePath = activeWorkspaces[index]["uri"]["fsPath"];
+    // prompt the user for the current active workspace
+    vscode.window
+      .showQuickPick(quickPicks, {
+        placeHolder: "Please Select the Active Workspace"
+      })
+      .then(res => {
+        if (!res || !activeWorkspaces) return;
+        // stores selection and path on this
+        this.quickPickHandler(res, activeWorkspaces);
+      });
+  }
 
-        // find the closest config file
-        // ! Handle not in the same folder
-        this.configFilePath = this.getSettingsPath(
-          this.activeWorkspacePath,
-          ".trinity.json"
-        );
+  quickPickHandler(res: string, activeWorkspaces: vscode.WorkspaceFolder[]) {
+    console.log("res: ", res);
+    // handle edges
 
-        console.log("configFilePath: ", this.configFilePath);
-      }
-    });
+    // get index of selection
+    const index: number = parseInt(res.split(".")[0]) - 1;
+
+    // store workspace name and filepath
+    this.activeWorkspaceName = res;
+    this.activeWorkspacePath = activeWorkspaces[index]["uri"]["fsPath"];
+
+    // find the closest config file
+    this.configFilePath = this.getSettingsPath(
+      this.activeWorkspacePath,
+      ".trinity.json"
+    );
+
+    console.log("configFilePath: ", this.configFilePath);
+    console.log("THIS: ", this);
+    // begin watching the config file
+    this.watchConfig();
   }
 }
