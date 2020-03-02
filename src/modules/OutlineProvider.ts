@@ -40,8 +40,11 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
   // Given Type from VSCode Extension
   data: TreeTask[] = [];
 
-  constructor(private context: vscode.ExtensionContext) {
+  //? must change types when config interface is defined
+  config: any;
+  constructor(private context: vscode.ExtensionContext, config: any) {
     // this.data =
+    this.config = config;
     this.createGraphStructure();
   }
 
@@ -109,30 +112,28 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
   }
 
   createGraphStructure() {
-    // Types for the passwords to the datbases
-    const dbAddress: string = "bolt://localhost";
-    const username: string = "neo4j";
-    const password: string = "test";
 
     const boundGetGraphStructure = getGraphStructure.bind(this);
 
-    boundGetGraphStructure(dbAddress, username, password).then(
-      (res: GraphStructure | undefined) => {
-        if (res !== undefined) {
-          //Saves the structure of ResultObject- Type is defined in Result Object
-          // let newData = [];
-          const resultObject: ResultObject = this.createResultObj(res);
+    boundGetGraphStructure(
+      this.config.dbAddress,
+      this.config.username,
+      this.config.password
+    ).then((res: GraphStructure | undefined) => {
+      if (res !== undefined) {
+        //Saves the structure of ResultObject- Type is defined in Result Object
+        // let newData = [];
+        const resultObject: ResultObject = this.createResultObj(res);
 
-          console.log(resultObject);
+        console.log(resultObject);
 
-          this.data = this.setUpData(resultObject);
-          this._onDidChangeTreeData.fire();
-          // console.log("inside promise", newData);
-          // this.data = newData;
-          // return newData;
-        }
+        this.data = this.setUpData(resultObject);
+        this._onDidChangeTreeData.fire();
+        // console.log("inside promise", newData);
+        // this.data = newData;
+        // return newData;
       }
-    );
+    });
   }
 
   setUpData(resultObj: ResultObject) {
