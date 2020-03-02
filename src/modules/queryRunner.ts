@@ -6,7 +6,11 @@ import neo4j from "neo4j-driver";
 export class QueryRunner {
   tChannel: any;
 
-  constructor() {
+  // ? must change types when config interface is defined
+  config: any;
+
+  constructor(config: any) {
+    this.config = config;
     this.tChannel = vscode.window.createOutputChannel("Trinity");
   }
 
@@ -18,13 +22,9 @@ export class QueryRunner {
     // tChannel.appendLine("RESULT ARRAY:\n" + result);
     const test = "test";
 
-    const dbAddress: string = "bolt://localhost";
-    const username: string = "neo4j";
-    const password: string = "test";
-
     const driver = neo4j.driver(
-      dbAddress,
-      neo4j.auth.basic(username, password)
+      this.config.dbAddress,
+      neo4j.auth.basic(this.config.username, this.config.password)
     );
     const session = driver.session();
     const txc = session.beginTransaction();
