@@ -23,6 +23,10 @@ export class QueryRunner {
       neo4j.auth.basic(this.config.username, this.config.password)
     );
 
+    if (this.config.clearChannelOnSave) {
+      this.tChannel.clear();
+    }
+
     for (let query of result) {
       const session = driver.session({ defaultAccessMode: neo4j.session.READ });
       if (!query) {
