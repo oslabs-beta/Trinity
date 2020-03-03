@@ -8,7 +8,9 @@ interface TrinitySettings {
   dbAddress: string;
   username: string;
   password: string;
-  clearChannelOnSave: boolean;
+  clearChannelOnSave?: boolean; // -> Default to false
+  writeOutputToJSON?: boolean; // -> Default to false
+  JSONOutputRelativePath?: string; // -> Default to './'
 }
 
 export class TrinityConfig {
@@ -61,6 +63,15 @@ export class TrinityConfig {
   getSettings(filePath: string): TrinitySettings {
     const trinityConfigString: string = fs.readFileSync(filePath, "utf-8");
     const trinityConfig: TrinitySettings = JSON.parse(trinityConfigString);
+
+    // default settings
+    if (!trinityConfig.clearChannelOnSave)
+      trinityConfig.clearChannelOnSave = false;
+    if (!trinityConfig.writeOutputToJSON)
+      trinityConfig.writeOutputToJSON = false;
+    if (!trinityConfig.JSONOutputRelativePath)
+      trinityConfig.JSONOutputRelativePath = "./";
+
     return trinityConfig;
   }
 
