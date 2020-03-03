@@ -43,6 +43,7 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
   //? must change types when config interface is defined
   config: any;
   constructor(private context: vscode.ExtensionContext, config: any) {
+    console.log(config);
     // this.data =
     this.config = config;
     this.createGraphStructure();
@@ -112,9 +113,8 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
   }
 
   createGraphStructure() {
-
     const boundGetGraphStructure = getGraphStructure.bind(this);
-
+    // console.log(this.config);
     boundGetGraphStructure(
       this.config.dbAddress,
       this.config.username,

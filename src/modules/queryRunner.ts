@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-const fs=require("fs");
-const { parseExtract, extract }=require("./parseExtract.js");
+const fs = require("fs");
+const { parseExtract, extract } = require("./parseExtract.js");
 import neo4j from "neo4j-driver";
 
 export class QueryRunner {
@@ -10,37 +10,34 @@ export class QueryRunner {
   config: any;
 
   constructor(config: any) {
-    this.config=config;
-    this.tChannel=vscode.window.createOutputChannel("Trinity");
+    this.config = config;
+    this.tChannel = vscode.window.createOutputChannel("Trinity");
   }
 
   handleSave(event: vscode.TextDocument) {
     // console logging and reading the file that we have saved and converting it to string
-    const result=parseExtract(fs.readFileSync(event.fileName).toString());
+    const result = parseExtract(fs.readFileSync(event.fileName).toString());
 
-    // const resultText = JSON.stringify(result, null, 2);
-    // tChannel.appendLine("RESULT ARRAY:\n" + result);
-    const test="test";
-
-    const driver=neo4j.driver(
+    const driver = neo4j.driver(
       this.config.dbAddress,
       neo4j.auth.basic(this.config.username, this.config.password)
     );
-    // tChannel.appendLine((() => "test")());
-    // tChannel.appendLine("Hello");
 
     for (let query of result) {
-      const session=driver.session();
+      const session = driver.session({ defaultAccessMode: neo4j.session.READ });
       if (!query) {
         this.tChannel.appendLine("Query skipped");
         continue;
       }
-      session.readTransaction(tx => tx.run(query))
+      session
+        .readTransaction(tx => tx.run(query))
         .then(result => {
           this.tChannel.appendLine(query);
           this.tChannel.appendLine(
             `Result: ${JSON.stringify(result.records, null, 2)}`
           );
+          // session.close();
+          // driver.close();
         })
         .catch((err: Error): void => {
           vscode.window.showInformationMessage(

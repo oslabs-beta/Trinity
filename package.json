@@ -59,9 +59,10 @@
     "test-compile": "tsc -p ./"
   },
   "devDependencies": {
+    "@types/find": "^0.2.1",
     "@types/glob": "^7.1.1",
     "@types/mocha": "^7.0.1",
-    "@types/node": "^12.11.7",
+    "@types/node": "^12.12.28",
     "@types/vscode": "^1.42.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
@@ -75,8 +76,10 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "find": "^0.3.0",
     "neo4j-driver": "^4.0.1",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-typescript": "^1.0.0"
+    "parcel-plugin-typescript": "^1.0.0",
+    "walk": "^2.3.14"
   }
 }

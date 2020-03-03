@@ -1,8 +1,8 @@
 import * as assert from "assert";
-import * as sampleData from "./sampleData.js";
-const { parseExtract }=require("../../modules/parseExtract");
-const { extract }=require("../../modules/parseExtract");
-const { OutlineProvider }=require("../../modules/OutlineProvider");
+
+const { parseExtract } = require("../../modules/parseExtract");
+const { extract } = require("../../modules/parseExtract");
+const { OutlineProvider } = require("../../modules/OutlineProvider");
 
 //import { expect } from "chai";
 
@@ -14,7 +14,7 @@ import * as vscode from "vscode";
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
 
-  const exResultData={
+  const exResultData = {
     graphOutline: [
       { label: "Movie", properties: ["title", "tagline", "released"] },
       { label: "Person", properties: ["born", "name"] }
@@ -34,12 +34,11 @@ suite("Extension Test Suite", () => {
     biDirectionalRelationship: []
   };
 
-  const testConfig={
+  const testConfig = {
     dbAddress: "bolt://localhost",
     username: "neo4j",
     password: "test"
   };
-
 
   test("Sample test", () => {
     assert.equal(-1, [1, 2, 3].indexOf(5));
@@ -47,13 +46,13 @@ suite("Extension Test Suite", () => {
   });
 
   test("Extract functionality", () => {
-    const extractObj=extract("Trinity('Test') stuff");
+    const extractObj = extract("Trinity('Test') stuff");
     assert.equal(extractObj.queryString, "Test");
     assert.equal(extractObj.currIndex, 14);
   });
 
   test("parseExtract functionality", () => {
-    const queryArray=parseExtract(
+    const queryArray = parseExtract(
       "Trinity('Test') stuff Trinity('anotherTest')"
     );
     assert.equal(queryArray[0], "Test");
@@ -61,8 +60,8 @@ suite("Extension Test Suite", () => {
   });
   //Testing OutlineProvier methods
 
-  const outlineProvider=new OutlineProvider(undefined, testConfig);
-  const exResultObj=outlineProvider.createResultObj(exResultData);
+  const outlineProvider = new OutlineProvider(undefined, testConfig);
+  const exResultObj = outlineProvider.createResultObj(exResultData);
 
   test("OutlineProvider class", () => {
     assert.equal(exResultObj.Person.Properties[0], "born");
@@ -72,7 +71,7 @@ suite("Extension Test Suite", () => {
 
   // testing setUpData method
 
-  const treeData=outlineProvider.setUpData(exResultObj);
+  const treeData = outlineProvider.setUpData(exResultObj);
 
   test("setUpData method", () => {
     assert.equal(treeData[0].label, "Person");
