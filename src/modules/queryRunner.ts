@@ -22,23 +22,22 @@ export class QueryRunner {
       this.config.dbAddress,
       neo4j.auth.basic(this.config.username, this.config.password)
     );
-    const session = driver.session({ defaultAccessMode: neo4j.session.WRITE });
-    const txc = session.beginTransaction();
 
     for (let query of result) {
-      this.tChannel.appendLine(query);
+      const session = driver.session({ defaultAccessMode: neo4j.session.READ });
       if (!query) {
         this.tChannel.appendLine("Query skipped");
         continue;
       }
-      txc
-        .run(query)
+      session
+        .readTransaction(tx => tx.run(query))
         .then(result => {
+          this.tChannel.appendLine(query);
           this.tChannel.appendLine(
             `Result: ${JSON.stringify(result.records, null, 2)}`
           );
-          session.close();
-          driver.close();
+          // session.close();
+          // driver.close();
         })
         .catch((err: Error): void => {
           vscode.window.showInformationMessage(

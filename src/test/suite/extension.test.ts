@@ -1,5 +1,5 @@
 import * as assert from "assert";
-// import * as sampleData from "./sampleData.js";
+
 const { parseExtract } = require("../../modules/parseExtract");
 const { extract } = require("../../modules/parseExtract");
 const { OutlineProvider } = require("../../modules/OutlineProvider");
@@ -13,12 +13,6 @@ import * as vscode from "vscode";
 
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
-
-  const testConfig = {
-    dbAddress: "bolt://localhost",
-    username: "neo4j",
-    password: "test"
-  };
 
   const exResultData = {
     graphOutline: [
@@ -38,6 +32,12 @@ suite("Extension Test Suite", () => {
       }
     ],
     biDirectionalRelationship: []
+  };
+
+  const testConfig = {
+    dbAddress: "bolt://localhost",
+    username: "neo4j",
+    password: "test"
   };
 
   test("Sample test", () => {
