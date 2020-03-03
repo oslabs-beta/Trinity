@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import * as sampleData from "./sampleData.js";
+// import * as sampleData from "./sampleData.js";
 const { parseExtract } = require("../../modules/parseExtract");
 const { extract } = require("../../modules/parseExtract");
 const { OutlineProvider } = require("../../modules/OutlineProvider");
@@ -13,6 +13,12 @@ import * as vscode from "vscode";
 
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
+
+  const testConfig = {
+    dbAddress: "bolt://localhost",
+    username: "neo4j",
+    password: "test"
+  };
 
   const exResultData = {
     graphOutline: [
@@ -54,7 +60,7 @@ suite("Extension Test Suite", () => {
   });
   //Testing OutlineProvier methods
 
-  const outlineProvider = new OutlineProvider();
+  const outlineProvider = new OutlineProvider(undefined, testConfig);
   const exResultObj = outlineProvider.createResultObj(exResultData);
 
   test("OutlineProvider class", () => {

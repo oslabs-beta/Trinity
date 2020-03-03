@@ -19,8 +19,8 @@ export class TrinityConfig {
   activeSettings?: TrinitySettings;
 
   constructor() {
-    this.watchHandler.bind(this);
-    this.getActiveWorkspace();
+    this.watchHandler = this.watchHandler.bind(this);
+    // this.getActiveWorkspace();
   }
 
   findFileInParentDirectory(
@@ -88,7 +88,8 @@ export class TrinityConfig {
     console.log(this.activeSettings);
   }
 
-  getActiveWorkspace(): void {
+  // ! Deal with type <any>
+  async getActiveWorkspace(): Promise<any> {
     // find all the current active workspaces
     const activeWorkspaces: vscode.WorkspaceFolder[] | undefined =
       vscode.workspace.workspaceFolders;
@@ -104,15 +105,17 @@ export class TrinityConfig {
     }
 
     // prompt the user for the current active workspace
-    vscode.window
+    return vscode.window
       .showQuickPick(quickPicks, {
         placeHolder: "Please Select the Active Workspace"
       })
       .then(res => {
+        console.log("in response");
         if (!res || !activeWorkspaces) return;
         // stores selection and path on this
         this.quickPickHandler(res, activeWorkspaces);
       });
+    // .catch((err) => console.log(err));
   }
 
   quickPickHandler(res: string, activeWorkspaces: vscode.WorkspaceFolder[]) {
@@ -136,5 +139,6 @@ export class TrinityConfig {
     console.log("THIS: ", this);
     // begin watching the config file
     this.watchConfig();
+    this.watchHandler();
   }
 }

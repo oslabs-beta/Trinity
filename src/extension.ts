@@ -9,7 +9,8 @@ let config: object;
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   // Load configuration
-  const trinityConfig = new TrinityConfig();
+
+  // console.log("Extension.ts tSettings: ", trinityConfig.activeSettings);
   // trinityConfig.getActiveWorkspace();
   // trinityConfig.watchConfig();
 
@@ -19,31 +20,37 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Setup the Trinity Outline in the Explorer view
-  // ? only for testing of config file
-  const testConfig = {
-    dbAddress: "bolt://localhost",
-    username: "neo4j",
-    password: "test"
-  };
+  // // ? only for testing of config file
+  // const testConfig = {
+  //   dbAddress: "bolt://localhost",
+  //   username: "neo4j",
+  //   password: "test"
+  // };
 
-  const OP = new OutlineProvider(context, testConfig);
-  OP.show();
-  vscode.window.registerTreeDataProvider("trinityOutline", OP);
-  vscode.commands.registerCommand("trinityOutline.refresh", () =>
-    OP.createGraphStructure()
-  );
-  vscode.commands.registerCommand("trinityOutline.show", () => {
-    console.log("show Triggered");
+  // ! Don't lose me
+  const trinityConfig = new TrinityConfig();
+
+  trinityConfig.getActiveWorkspace().then(() => {
+    console.log("Extension.ts tSettings: ", trinityConfig.activeSettings);
+    const OP = new OutlineProvider(context, trinityConfig.activeSettings);
     OP.show();
-  });
+    vscode.window.registerTreeDataProvider("trinityOutline", OP);
+    vscode.commands.registerCommand("trinityOutline.refresh", () =>
+      OP.createGraphStructure()
+    );
+    vscode.commands.registerCommand("trinityOutline.show", () => {
+      console.log("show Triggered");
+      OP.show();
+    });
 
-  // Create a new setup Extension to handle live querying and
-  // create a Trinity Channel
-  const queryRunner = new QueryRunner(testConfig);
-  // functionality executed every time the active document is saved
-  vscode.workspace.onDidSaveTextDocument(event =>
-    queryRunner.handleSave(event)
-  );
+    // Create a new setup Extension to handle live querying and
+    // create a Trinity Channel
+    const queryRunner = new QueryRunner(trinityConfig.activeSettings);
+    // functionality executed every time the active document is saved
+    vscode.workspace.onDidSaveTextDocument(event =>
+      queryRunner.handleSave(event)
+    );
+  });
 }
 
 export function deactivate() {}
