@@ -1,10 +1,15 @@
 import * as vscode from "vscode";
-import { stringify } from "querystring";
-
 import {
   getGraphStructure,
   GraphStructure
 } from "../server/neo4j/graphdb-outline-ts";
+
+/**
+ * Relation: Interface for all properties and dependent nodes
+ *
+ * ResultObject: Interface for all nodes and their properties and relationships
+ *
+ */
 
 interface Relation {
   [key: string]: string[];
@@ -18,41 +23,45 @@ interface ResultObject {
   };
 }
 
-interface TreeTypes {
-  collapsibleState: Number;
-  label: String;
-  children?: any;
-}
-
-interface Props {
-  label: string;
-  properties: string[];
-}
-import * as path from "path";
-
+/**
+ *
+ * OutlineProvider Class: Models outline structure utlilizing both VSCode methods and our own methods. Within this object
+ * an asyncronous call is made to database, after which we used the createResultObj method to format our data.
+ * Finally, we use the TreeTask class to create the exact format for VSCode to provide an outline view.
+ *
+ * TreeTask Class: Extends vscode tree item and allows us to create types for the specific items that will make up our outline view
+ *
+ */
 export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
-  // //<TreeTask> {
-  // onDidChangeTreeData?: vscode.Event<TreeTask | null | undefined> | undefined;
+  // The following methods must be fired whenever tree data changes in order to see the change in our outline view
+  // Private referring to the fact that it cannot be accessed outside the object
   private _onDidChangeTreeData: vscode.EventEmitter<TreeTask | null> = new vscode.EventEmitter<TreeTask | null>();
+  // Readonly referring to the fact that it cannot be changed
   readonly onDidChangeTreeData: vscode.Event<TreeTask | null> = this
     ._onDidChangeTreeData.event;
-
-  // Given Type from VSCode Extension
+  // Array of tree tasks used to populate outline view
   data: TreeTask[] = [];
 
-  //? must change types when config interface is defined
+  /**
+   * Trinity config inherits the class that reads the user's login/database information
+   * Constructor executes create graph structure which fills the OutlineProvider with data
+   */
   trinityConfig: any;
   constructor(private context: vscode.ExtensionContext, trinityConfig: any) {
     this.trinityConfig = trinityConfig;
     this.createGraphStructure();
   }
 
+  /**
+   * createResultObj method accepts result data as arg from call to database and re-structures the returned data so that it can be easily
+   * manipulated to create outline view
+   * @param resultData
+   */
+
   createResultObj(resultData: GraphStructure) {
     // Create Result Obj
     const resultObj: ResultObject = {};
-
-    // console.log("CRO, Input:", resultData);
-
+    // UniDirectional
     for (let i = 0; i < resultData.uniDirectionalRelationship.length; i += 1) {
       // for each unique  item in origin array, create a key on result obj
       let originNodes: string[] =
@@ -76,7 +85,7 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
         }
       }
     }
-    // For all the bidrectional relationships in the data
+    // BiDirectional
     for (let y = 0; y < resultData.biDirectionalRelationship.length; y += 1) {
       // Array of all the origin nodes in relationship object
       let originNodes = resultData.biDirectionalRelationship[y].originNode;
@@ -90,7 +99,7 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
         resultObj[originNodes[z]]["Bi-Directional"][biRelation] = dependentNode;
       }
     }
-
+    // Properties
     for (let q = 0; q < resultData.graphOutline.length; q += 1) {
       let nameNode: string = resultData.graphOutline[q].label;
       let propsNode: string[] = resultData.graphOutline[q].properties;
@@ -109,7 +118,10 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
     }
     return resultObj;
   }
-
+  /**
+   * createGraphStructure method is called in constructor and utilizes the boundGetGraphStructure and setUpData methods to populate
+   * OutlineProvider with correct format for data
+   */
   createGraphStructure() {
     const boundGetGraphStructure = getGraphStructure.bind(this);
 
@@ -118,22 +130,18 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
     boundGetGraphStructure(dbAddress, username, password).then(
       (res: GraphStructure | undefined) => {
         if (res !== undefined) {
-          //Saves the structure of ResultObject- Type is defined in Result Object
-          // let newData = [];
           const resultObject: ResultObject = this.createResultObj(res);
-
-          console.log(resultObject);
-
           this.data = this.setUpData(resultObject);
           this._onDidChangeTreeData.fire();
-          // console.log("inside promise", newData);
-          // this.data = newData;
-          // return newData;
         }
       }
     );
   }
-
+  /**
+   *  setUpData method accepts resultObj from the createResultObj method and constructs an array of tree tasks that will be used
+   *  to populate the outline view
+   * @param resultObj
+   */
   setUpData(resultObj: ResultObject) {
     let array: TreeTask[] = [];
 
@@ -177,11 +185,15 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
     return array;
   }
 
+  // Executes command showing outline provider
   show() {
-    console.log("show OP");
     vscode.commands.executeCommand("setContext", "trinityOutlineEnabled", true);
   }
-
+  /**
+   * VSCode API uses getChildren AND getTreeItem methods to aid in construction of tree task outline view
+   * @param element
+   *
+   */
   getChildren(
     element?: TreeTask | undefined
   ): vscode.ProviderResult<TreeTask[]> {
@@ -195,7 +207,6 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
     return element;
   }
 }
-
 class TreeTask extends vscode.TreeItem {
   children: TreeTask[] | undefined;
 
