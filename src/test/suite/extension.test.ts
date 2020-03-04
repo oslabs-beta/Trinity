@@ -35,9 +35,11 @@ suite("Extension Test Suite", () => {
   };
 
   const testConfig = {
-    dbAddress: "bolt://localhost",
-    username: "neo4j",
-    password: "test"
+    activeSettings: {
+      dbAddress: "bolt://localhost",
+      username: "neo4j",
+      password: "test"
+    }
   };
 
   test("Sample test", () => {
