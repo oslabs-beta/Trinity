@@ -15,20 +15,20 @@ export function activate(context: vscode.ExtensionContext) {
   const trinityConfig = new TrinityConfig();
 
   trinityConfig.getActiveWorkspace().then(() => {
-    console.log("Extension.ts tSettings: ", trinityConfig.activeSettings);
-    const OP = new OutlineProvider(context, trinityConfig.activeSettings);
+    // console.log("Extension.ts tSettings: ", trinityConfig.activeSettings);
+    const OP = new OutlineProvider(context, trinityConfig);
     OP.show();
     vscode.window.registerTreeDataProvider("trinityOutline", OP);
     vscode.commands.registerCommand("trinityOutline.refresh", () =>
       OP.createGraphStructure()
     );
     vscode.commands.registerCommand("trinityOutline.show", () => {
-      console.log("show Triggered");
+      // console.log("show Triggered");
       OP.show();
     });
     // Create a new setup Extension to handle live querying and
     // create a Trinity Channel
-    const queryRunner = new QueryRunner(trinityConfig.activeSettings);
+    const queryRunner = new QueryRunner(trinityConfig);
     // functionality executed every time the active document is saved
     vscode.workspace.onDidSaveTextDocument(event =>
       queryRunner.handleSave(event)

@@ -11,12 +11,15 @@ interface TrinitySettings {
   clearChannelOnSave?: boolean; // -> Default to false
   writeOutputToJSON?: boolean; // -> Default to false
   JSONOutputRelativePath?: string; // -> Default to './'
+  JSONOutputAbsolutePath?: string;
+  outputFilename?: string;
 }
 
 export class TrinityConfig {
   activeWorkspaceName?: string;
   activeWorkspacePath?: string;
   configFilePath?: string;
+  configFilePathRoot?: string;
   configWatcher?: fs.FSWatcher;
   activeSettings?: TrinitySettings;
 
@@ -64,14 +67,30 @@ export class TrinityConfig {
     const trinityConfigString: string = fs.readFileSync(filePath, "utf-8");
     const trinityConfig: TrinitySettings = JSON.parse(trinityConfigString);
 
+    this.activeSettings = trinityConfig;
     // default settings
-    if (!trinityConfig.clearChannelOnSave)
-      trinityConfig.clearChannelOnSave = false;
-    if (!trinityConfig.writeOutputToJSON)
-      trinityConfig.writeOutputToJSON = false;
-    if (!trinityConfig.JSONOutputRelativePath)
-      trinityConfig.JSONOutputRelativePath = "./";
-
+    if (!this.activeSettings.clearChannelOnSave) {
+      this.activeSettings.clearChannelOnSave = false;
+    }
+    if (!this.activeSettings.writeOutputToJSON) {
+      this.activeSettings.writeOutputToJSON = false;
+    }
+    if (!this.activeSettings.JSONOutputRelativePath) {
+      this.activeSettings.JSONOutputRelativePath = "./";
+    }
+    if (!this.activeSettings.outputFilename) {
+      this.activeSettings.outputFilename = "output.json";
+    }
+    if (
+      this.configFilePathRoot &&
+      this.activeSettings &&
+      this.activeSettings.JSONOutputRelativePath
+    ) {
+      trinityConfig.JSONOutputAbsolutePath = path.resolve(
+        this.configFilePathRoot,
+        this.activeSettings.JSONOutputRelativePath
+      );
+    }
     return trinityConfig;
   }
 
@@ -93,9 +112,11 @@ export class TrinityConfig {
     console.log("Watch Handler Fired: ", this.configFilePath);
     if (!this.configFilePath) return;
 
-    const string: string = fs.readFileSync(this.configFilePath, "utf8");
-    console.log(string);
-    this.activeSettings = JSON.parse(string);
+    // const string: string = fs.readFileSync(this.configFilePath, "utf8");
+    // console.log(string);
+    // this.activeSettings = JSON.parse(string);
+    this.getSettings(this.configFilePath);
+
     console.log(this.activeSettings);
   }
 
@@ -145,6 +166,12 @@ export class TrinityConfig {
       this.activeWorkspacePath,
       ".trinity.json"
     );
+    if (this.configFilePath) {
+      this.configFilePathRoot = this.configFilePath.replace(
+        ".trinity.json",
+        ""
+      );
+    }
 
     console.log("configFilePath: ", this.configFilePath);
     console.log("THIS: ", this);
