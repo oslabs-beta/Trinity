@@ -1,3 +1,14 @@
+/**
+ * ParseExtract accepts file contents as giant string and recursively calls extract function until Trinity queries are not found
+ * within the string argument and returns an array of Cypher queries.
+ *
+ * findQuery: locates each instance of Trinity keyword (which contains a query) and recursively calls extract until Trinity queries are not found
+ *
+ * Extract: processes each query within Trinity function
+ * @param string
+ *
+ */
+
 function parseExtract(string: string): Array<string | boolean> {
   // Array for storing the Queries inside the string
   let array: Array<string | boolean> = [];
@@ -6,16 +17,14 @@ function parseExtract(string: string): Array<string | boolean> {
   const findQuery = (string: string) => {
     // find the location of trinity in the string
     const tlocation: number = string.search("Trinity");
-    // console.log(tlocation);
 
     // if 0, Trinity hasn't been typed into the string
     if (tlocation !== -1) {
       // Create new string, which will be result of slicing from 'T' in Trinity
       let newString: string = string.slice(tlocation, string.length);
-      // console.log(newString);
 
       //Create new variable for the query and end location
-      //extract(newString) returns an array
+      //extract(newString) returns an object
       let queryNLocation: {
         queryString: string | boolean;
         currIndex: number;
@@ -34,10 +43,7 @@ function parseExtract(string: string): Array<string | boolean> {
     }
   };
 
-  //passing newString in to extract
-
   findQuery(string);
-
   return array;
 }
 
@@ -104,7 +110,6 @@ const extract = (
       queryString += currChar;
     }
   }
-
   return {
     queryString: queryString,
     currIndex: currIndex
