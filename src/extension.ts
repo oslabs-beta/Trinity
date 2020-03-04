@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Load configuration and event watcher
-  const trinityConfig = new TrinityConfig();
+  const trinityConfig: TrinityConfig = new TrinityConfig();
   // Trigger event watcher
   trinityConfig.getActiveWorkspace().then(() => {
     // Loading outline provider with active settings

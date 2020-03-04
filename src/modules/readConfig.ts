@@ -11,8 +11,8 @@ interface TrinitySettings {
   clearChannelOnSave?: boolean; // -> Default to false
   writeOutputToJSON?: boolean; // -> Default to false
   JSONOutputRelativePath?: string; // -> Default to './'
-  JSONOutputAbsolutePath?: string;
-  outputFilename?: string;
+  JSONOutputAbsolutePath?: string; // -> relative to the config file
+  outputFilename?: string; // -> default to the output.json
 }
 
 export class TrinityConfig {
@@ -24,8 +24,7 @@ export class TrinityConfig {
   activeSettings?: TrinitySettings;
 
   constructor() {
-    this.watchHandler = this.watchHandler.bind(this);
-    // this.getActiveWorkspace();
+    this.getSettings = this.getSettings.bind(this);
   }
 
   findFileInParentDirectory(
@@ -34,20 +33,24 @@ export class TrinityConfig {
   ): string | undefined {
     let currPath: string = startingDirectory;
     const rootDir: string = path.parse(process.cwd()).root;
+    // iterate through parent directory untill reach the root
     while (currPath !== rootDir) {
+      // get all files and folders in current directory
       const files: string[] = fs.readdirSync(currPath, {
         encoding: "utf8",
         withFileTypes: false
       });
+      // iterate through files, looking for the configuration file
       for (let file of files) {
         if (file === fileName) {
           return path.resolve(currPath, file);
         }
       }
+      // if config file is not in the current directory,
+      // then check current directory's parents
       currPath = path.resolve(currPath, "../");
-      // console.log(currPath);
     }
-    return undefined;
+    // will return undefined if config file is not found
   }
 
   getSettingsPath(directoryName: string, fileName: string): string | undefined {
@@ -59,11 +62,13 @@ export class TrinityConfig {
     if (configPathSubdirectory.length > 0) {
       return configPathSubdirectory[0];
     }
-    //if config is not in sub directory recursively looking in parent directories
+    //if config is not in sub directory recursively look in the parent directories
     return this.findFileInParentDirectory(directoryName, fileName);
   }
 
-  getSettings(filePath: string): TrinitySettings {
+  getSettings(): void {
+    const filePath = this.configFilePath;
+    if (!filePath) return;
     const trinityConfigString: string = fs.readFileSync(filePath, "utf-8");
     const trinityConfig: TrinitySettings = JSON.parse(trinityConfigString);
 
@@ -91,43 +96,25 @@ export class TrinityConfig {
         this.activeSettings.JSONOutputRelativePath
       );
     }
-    return trinityConfig;
   }
 
   watchConfig(): void {
-    // Kill current watch if alread in progress
-    // https://stackoverflow.com/questions/53983342/how-to-close-fs-watch-listener-for-a-folder
+    // Kill current watch if already in progress
     if (this.configWatcher) this.configWatcher.close();
 
     // Initialize new watcher and store as this.configWatcher
     if (!this.configFilePath) return;
-    // const watcher = fs.watch.bind(this);
-    this.configWatcher = fs.watch(this.configFilePath, () =>
-      this.watchHandler()
-    );
-    console.log("watching config file");
+    this.configWatcher = fs.watch(this.configFilePath, () => {
+      // each time config file save, refresh configuration settigs
+      this.getSettings();
+    });
   }
 
-  watchHandler(): void {
-    console.log("Watch Handler Fired: ", this.configFilePath);
-    if (!this.configFilePath) return;
-
-    // const string: string = fs.readFileSync(this.configFilePath, "utf8");
-    // console.log(string);
-    // this.activeSettings = JSON.parse(string);
-    this.getSettings(this.configFilePath);
-
-    console.log(this.activeSettings);
-  }
-
-  // ! Deal with type <any>
-  async getActiveWorkspace(): Promise<any> {
+  async getActiveWorkspace(): Promise<void> {
     // find all the current active workspaces
     const activeWorkspaces: vscode.WorkspaceFolder[] | undefined =
       vscode.workspace.workspaceFolders;
     let quickPicks: string[] = [];
-
-    console.log(activeWorkspaces);
 
     // convert active workspaces to format for quickpick dropdown
     if (activeWorkspaces) {
@@ -137,24 +124,22 @@ export class TrinityConfig {
     }
 
     // prompt the user for the current active workspace
+    vscode.window.showInformationMessage(
+      "Trinity: Please select your Active Workspace"
+    );
     return vscode.window
       .showQuickPick(quickPicks, {
-        placeHolder: "Please Select the Active Workspace"
+        placeHolder: "Trinity: Please Select the Active Workspace"
       })
       .then(res => {
-        console.log("in response");
         if (!res || !activeWorkspaces) return;
-        // stores selection and path on this
+        // stores user's selection and path on 'this'
         this.quickPickHandler(res, activeWorkspaces);
       });
-    // .catch((err) => console.log(err));
   }
 
   quickPickHandler(res: string, activeWorkspaces: vscode.WorkspaceFolder[]) {
-    console.log("res: ", res);
-    // handle edges
-
-    // get index of selection
+    // get index of user's selection
     const index: number = parseInt(res.split(".")[0]) - 1;
 
     // store workspace name and filepath
@@ -166,17 +151,15 @@ export class TrinityConfig {
       this.activeWorkspacePath,
       ".trinity.json"
     );
+    // get file path of the config file
     if (this.configFilePath) {
       this.configFilePathRoot = this.configFilePath.replace(
         ".trinity.json",
         ""
       );
     }
-
-    console.log("configFilePath: ", this.configFilePath);
-    console.log("THIS: ", this);
     // begin watching the config file
     this.watchConfig();
-    this.watchHandler();
+    this.getSettings();
   }
 }
