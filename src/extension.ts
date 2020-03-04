@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Load configuration
-  const trinityConfig = new TrinityConfig();
+  const trinityConfig: TrinityConfig = new TrinityConfig();
 
   trinityConfig.getActiveWorkspace().then(() => {
     // console.log("Extension.ts tSettings: ", trinityConfig.activeSettings);
