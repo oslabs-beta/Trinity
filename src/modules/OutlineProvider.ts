@@ -41,11 +41,9 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
   data: TreeTask[] = [];
 
   //? must change types when config interface is defined
-  config: any;
-  constructor(private context: vscode.ExtensionContext, config: any) {
-    console.log(config);
-    // this.data =
-    this.config = config;
+  trinityConfig: any;
+  constructor(private context: vscode.ExtensionContext, trinityConfig: any) {
+    this.trinityConfig = trinityConfig;
     this.createGraphStructure();
   }
 
@@ -114,26 +112,26 @@ export class OutlineProvider implements vscode.TreeDataProvider<TreeTask> {
 
   createGraphStructure() {
     const boundGetGraphStructure = getGraphStructure.bind(this);
-    // console.log(this.config);
-    boundGetGraphStructure(
-      this.config.dbAddress,
-      this.config.username,
-      this.config.password
-    ).then((res: GraphStructure | undefined) => {
-      if (res !== undefined) {
-        //Saves the structure of ResultObject- Type is defined in Result Object
-        // let newData = [];
-        const resultObject: ResultObject = this.createResultObj(res);
 
-        console.log(resultObject);
+    const { dbAddress, username, password } = this.trinityConfig.activeSettings;
 
-        this.data = this.setUpData(resultObject);
-        this._onDidChangeTreeData.fire();
-        // console.log("inside promise", newData);
-        // this.data = newData;
-        // return newData;
+    boundGetGraphStructure(dbAddress, username, password).then(
+      (res: GraphStructure | undefined) => {
+        if (res !== undefined) {
+          //Saves the structure of ResultObject- Type is defined in Result Object
+          // let newData = [];
+          const resultObject: ResultObject = this.createResultObj(res);
+
+          console.log(resultObject);
+
+          this.data = this.setUpData(resultObject);
+          this._onDidChangeTreeData.fire();
+          // console.log("inside promise", newData);
+          // this.data = newData;
+          // return newData;
+        }
       }
-    });
+    );
   }
 
   setUpData(resultObj: ResultObject) {
