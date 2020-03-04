@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.runTrinity"
+    "onCommand:extension.runTrinity",
+    "onCommand:extension.deactivateTrinity"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -18,6 +19,10 @@
       {
         "command": "extension.runTrinity",
         "title": "Run Trinity"
+      },
+      {
+        "command": "extension.deactivateTrinity",
+        "title": "Deactivate Trinity"
       },
       {
         "command": "trinityOutline.refresh",

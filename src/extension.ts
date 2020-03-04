@@ -26,7 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
       // console.log("show Triggered");
       OP.show();
     });
-
     // Create a new setup Extension to handle live querying and
     // create a Trinity Channel
     const queryRunner = new QueryRunner(trinityConfig);
@@ -34,6 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidSaveTextDocument(event =>
       queryRunner.handleSave(event)
     );
+
+    // deactivate functionality
+    vscode.commands.registerCommand("extension.deactivateTrinity", () => {
+      // this command will restart window automatically and Trinity extension will not be running
+      vscode.commands.executeCommand("workbench.action.reloadWindow");
+    });
   });
 }
 
