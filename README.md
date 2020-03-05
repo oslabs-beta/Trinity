@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="250px" src="./DOCUMENTATION/Trinity-Logo.png" />
+  <img width="250px" src="https://raw.githubusercontent.com/oslabs-beta/Trinity/dev/DOCUMENTATION/Trinity-Logo.png" />
 </p>
 
 # Trinity
@@ -18,7 +18,7 @@ Trinity is a VS Code extension for previewing Neo4j queries and database structu
 4. Renders the responses to the Trinity output channel on VS Code.
 5. Optionally writes the output to a local JSON file based on the user's configuration.
 
-  <img width="800px" src="./DOCUMENTATION/gifs/basicDemo.gif" alt="demo gif" />
+  <img width="800px" src="https://raw.githubusercontent.com/oslabs-beta/Trinity/dev/DOCUMENTATION/gifs/basicDemo.gif" alt="demo gif" />
 
 ## Getting Started
 

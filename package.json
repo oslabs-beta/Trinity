@@ -2,11 +2,19 @@
   "name": "trinity",
   "displayName": "Trinity",
   "description": "VSCode extension for Cypher and Neo4j",
-  "version": "0.0.1",
+  "version": "0.2.0",
+  "publisher": "Trinity",
+  "icon": "resources/final.png",
   "engines": {
     "vscode": "^1.42.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oslabs-beta/Trinity"
+  },
   "categories": [
+    "Extension Packs",
+    "Language Packs",
     "Other"
   ],
   "activationEvents": [
@@ -18,11 +26,11 @@
     "commands": [
       {
         "command": "extension.runTrinity",
-        "title": "Run Trinity"
+        "title": "Trinity: Run Trinity"
       },
       {
         "command": "extension.deactivateTrinity",
-        "title": "Deactivate Trinity"
+        "title": "Trinity: Deactivate Trinity"
       },
       {
         "command": "trinityOutline.refresh",
