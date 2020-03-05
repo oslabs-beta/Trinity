@@ -2,7 +2,7 @@
   "name": "trinity",
   "displayName": "Trinity",
   "description": "VSCode extension for Cypher and Neo4j",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "Trinity",
   "icon": "resources/final.png",
   "engines": {
