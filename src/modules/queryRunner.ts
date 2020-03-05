@@ -1,22 +1,22 @@
 import * as vscode from "vscode";
 import { TrinityConfig } from "./readConfig";
-const fs = require("fs");
-const { parseExtract, extract } = require("./parseExtract.js");
+const fs=require("fs");
+const { parseExtract, extract }=require("./parseExtract");
 import neo4j from "neo4j-driver";
-const path = require("path");
+const path=require("path");
 
 export class QueryRunner {
   tChannel: vscode.OutputChannel;
   trinityConfig: TrinityConfig;
 
   constructor(trinityConfig: TrinityConfig) {
-    this.trinityConfig = trinityConfig;
-    this.tChannel = vscode.window.createOutputChannel("Trinity");
+    this.trinityConfig=trinityConfig;
+    this.tChannel=vscode.window.createOutputChannel("Trinity");
   }
   // executes each the active file is saved
   handleSave(event: vscode.TextDocument) {
     // read in the active file
-    const result = parseExtract(fs.readFileSync(event.fileName).toString());
+    const result=parseExtract(fs.readFileSync(event.fileName).toString());
     // destructure the active settings from the .trinity.json file
     const {
       dbAddress,
@@ -25,16 +25,16 @@ export class QueryRunner {
       clearChannelOnSave,
       JSONOutputAbsolutePath,
       outputFilename
-    } = this.trinityConfig.activeSettings || {};
+    }=this.trinityConfig.activeSettings||{};
     // if required settings are not present, notify the user and end early
-    if (!dbAddress || !username || !password) {
+    if (!dbAddress||!username||!password) {
       vscode.window.showInformationMessage(
         "Trinity: Unable to run Trinity Queries. Please check your login credentials in the .trinity.json file."
       );
       return;
     }
     // initialize connection to Neo4j DB
-    const driver = neo4j.driver(
+    const driver=neo4j.driver(
       dbAddress,
       neo4j.auth.basic(username, password)
     );
@@ -43,13 +43,13 @@ export class QueryRunner {
       this.tChannel.clear();
     }
     // create array to store return values from queries
-    const promises = [];
+    const promises=[];
     // define output file location
-    const outputPath = path.resolve(JSONOutputAbsolutePath, outputFilename);
+    const outputPath=path.resolve(JSONOutputAbsolutePath, outputFilename);
     // iterate across the queries
     for (let query of result) {
       // create a Neo4j session to submit the query to
-      const session = driver.session({ defaultAccessMode: neo4j.session.READ });
+      const session=driver.session({ defaultAccessMode: neo4j.session.READ });
       // only run valid queries
       if (!query) {
         this.tChannel.appendLine("Query skipped");
@@ -76,10 +76,10 @@ export class QueryRunner {
     }
 
     Promise.all(promises).then(values => {
-      const stringObj = JSON.stringify(values, null, 2);
+      const stringObj=JSON.stringify(values, null, 2);
 
       // only writes non empty objects to the outputPath.
-      if (stringObj !== "[]") {
+      if (stringObj!=="[]") {
         fs.writeFile(outputPath, stringObj, "utf8", (err: Error) => {
           if (!err) {
             return;
