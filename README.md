@@ -43,7 +43,7 @@ In your working directory create a
 }
 ```
 
-Required Settings: `dbAddess`, `username` and `password`.
+Required Settings: `dbAddress`, `username` and `password`.
 
 Default settings when not defined in the configuration file:
 
