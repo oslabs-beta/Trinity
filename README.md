@@ -77,7 +77,7 @@ _\*Multiple queries may be invoked within a single file. Current functionality d
 
 ```python
 # Create a Trinity function definition in your working file.
-def Trinity ():
+def Trinity (_cq):
   return
 
 # Anywhere in your open file, put a Neo4j Cypher query inside the Trinity function. For example:
@@ -88,7 +88,7 @@ Trinity('Match (n{name: "Carrie-Anne Moss"}) Return n')
 
 ```javascript
 // Create a Trinity function definition in your working file.
-function Trinity() {}
+function Trinity(_cq) {}
 
 // Anywhere in your open file, put a Neo4j Cypher query inside the Trinity function. For example:
 Trinity('Match (n{name: "Carrie-Anne Moss"}) Return n');
